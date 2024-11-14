@@ -1,0 +1,173 @@
+<h2 mat-dialog-title>Creacion Propietario</h2>
+<mat-dialog-content>
+  <pre>{{ files | json }}</pre>
+  <form [formGroup]="formOwner">
+    <div class="grid grid-cols-4 gap-x-3 gap-y-1 py-2">
+      <div class="col-span-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="first_name" />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Paterno</mat-label>
+          <input matInput formControlName="middle_name" />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Materno</mat-label>
+          <input matInput formControlName="last_name" />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>CI</mat-label>
+          <input matInput formControlName="dni" />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Telefono</mat-label>
+          <input matInput formControlName="phone" />
+        </mat-form-field>
+      </div>
+      <div class="col-span-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Dirrecion</mat-label>
+          <input matInput formControlName="address" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="flex px-4 py-3 items-center">
+      <div class="text-lg">Mascotas</div>
+      <div class="flex-1"></div>
+      <div>
+        <button mat-mini-fab aria-label="Add pet button" (click)="add()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div formArrayName="pets">
+      <div class="flex flex-col gap-y-4 overflow-y-scroll max-h-96 px-2">
+        <div *ngFor="let control of pets.controls; let i = index">
+          <div class="border-2 border-gray-300 rounded-xl">
+            <div class="flex justify-end">
+              Id: {{ i }}
+              <button
+                mat-icon-button
+                aria-label="Remove pet"
+                matTooltip="Remover"
+                (click)="remove(i)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <div class="flex items-center gap-x-4 p-4">
+              <div class="w-2/5">
+                <image-uploader (fileChange)="selectImage($event, i)" />
+              </div>
+              <div class="w-3/5">
+                <div
+                  class="grid grid-cols-2 gap-x-3 gap-y-1"
+                  [formGroupName]="i"
+                >
+                  <div class="col-span-2">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Nombre</mat-label>
+                      <input matInput formControlName="name" />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Edad</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        min="0"
+                        max="20"
+                        formControlName="age"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Raza</mat-label>
+                      <input matInput formControlName="breed" />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Color</mat-label>
+                      <input matInput formControlName="color" />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Macho/Hembra</mat-label>
+                      <mat-select formControlName="sex">
+                        @for (element of animalSex; track $index) {
+                        <mat-option [value]="element">
+                          {{ element | uppercase }}
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Especie</mat-label>
+                      <mat-select formControlName="species">
+                        @for (element of species; track $index) {
+                        <mat-option [value]="element">
+                          {{ element | uppercase }}
+                        </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-checkbox formControlName="is_neutered" #neutered>
+                      {{
+                        neutered.checked ? "Esterilizado" : "Sin Esterilizar"
+                      }}
+                    </mat-checkbox>
+                  </div>
+                  <div>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Fecha Esterilización</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        formControlName="neuter_date"
+                      />
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-span-2">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Descripcion</mat-label>
+                      <textarea
+                        matInput
+                        formControlName="description"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="warn">Cancelar</button>
+  <button mat-button (click)="save()">Guardar</button>
+</mat-dialog-actions>

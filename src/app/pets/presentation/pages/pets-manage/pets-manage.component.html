@@ -1,0 +1,39 @@
+<div class="flex px-4 py-3 items-center">
+  <div class="text-2xl ...">Propietarios</div>
+  <div class="flex-1"></div>
+  <div>
+    <button mat-flat-button (click)="create()">
+      <mat-icon>add</mat-icon>
+      Agregar
+    </button>
+  </div>
+</div>
+<div class="p-2">
+  <table mat-table [dataSource]="datasource()" class="mat-elevation-z2">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dni">
+      <th mat-header-cell *matHeaderCellDef>Nro. CI</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pets">
+      <th mat-header-cell *matHeaderCellDef>Nro. Mascotas</th>
+      <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell p-3" colspan="4">No se encontraron resultados</td>
+    </tr>
+  </table>
+</div>
