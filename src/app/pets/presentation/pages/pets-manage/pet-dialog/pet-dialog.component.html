@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Creacion Propietario</h2>
+<h2 mat-dialog-title>{{ data ? "Editar" : "Crear" }} Propietario</h2>
 <mat-dialog-content>
-  <pre>{{ files | json }}</pre>
+  <pre>{{ petsList() | json }}</pre>
   <form [formGroup]="formOwner">
     <div class="grid grid-cols-4 gap-x-3 gap-y-1 py-2">
       <div class="col-span-2">
@@ -54,7 +54,6 @@
         <div *ngFor="let control of pets.controls; let i = index">
           <div class="border-2 border-gray-300 rounded-xl">
             <div class="flex justify-end">
-              Id: {{ i }}
               <button
                 mat-icon-button
                 aria-label="Remove pet"
@@ -66,7 +65,11 @@
             </div>
             <div class="flex items-center gap-x-4 p-4">
               <div class="w-2/5">
-                <image-uploader (fileChange)="selectImage($event, i)" />
+                <image-uploader
+                  [preview]="petsList()[i].image"
+                  [file]="petsList()[i].file"
+                  (fileChange)="selectImage($event, i)"
+                />
               </div>
               <div class="w-3/5">
                 <div
@@ -169,5 +172,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-button (click)="save()">Guardar</button>
+  <button mat-button [disabled]="formOwner.invalid" (click)="save()">
+    Guardar
+  </button>
 </mat-dialog-actions>

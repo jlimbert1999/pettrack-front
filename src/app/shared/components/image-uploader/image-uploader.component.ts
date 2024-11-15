@@ -70,7 +70,7 @@ export class ImageUploaderComponent implements OnInit {
   onImageRemoved = output<void>();
 
   url = signal<string | null>(null);
-  file = model<File>();
+  file = model<File | undefined>();
 
   ngOnInit(): void {
     if (!this.preview()) return;

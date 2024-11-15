@@ -12,22 +12,44 @@
   <table mat-table [dataSource]="datasource()" class="mat-elevation-z2">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nombre</th>
-      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="dni">
       <th mat-header-cell *matHeaderCellDef>Nro. CI</th>
-      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
     </ng-container>
 
     <ng-container matColumnDef="pets">
       <th mat-header-cell *matHeaderCellDef>Nro. Mascotas</th>
-      <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.pets.length }}</td>
     </ng-container>
 
     <ng-container matColumnDef="options">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+      <td mat-cell *matCellDef="let element" class="w-8">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          aria-label="Menu options"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="update(element)">
+            <mat-icon>edit</mat-icon>
+            <span>Editar</span>
+          </button>
+          <button mat-menu-item disabled>
+            <mat-icon>voicemail</mat-icon>
+            <span>Check voice mail</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>notifications_off</mat-icon>
+            <span>Disable alerts</span>
+          </button>
+        </mat-menu>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
