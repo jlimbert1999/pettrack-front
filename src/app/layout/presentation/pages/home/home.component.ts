@@ -23,6 +23,7 @@ import { map, shareReplay } from 'rxjs/operators';
     MatListModule,
     MatIconModule,
     AsyncPipe,
+    RouterModule,
   ],
 })
 export default class HomeComponent {

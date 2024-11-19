@@ -1,6 +1,5 @@
 <h2 mat-dialog-title>{{ data ? "Editar" : "Crear" }} Propietario</h2>
 <mat-dialog-content>
-  <pre>{{ petsList() | json }}</pre>
   <form [formGroup]="formOwner">
     <div class="grid grid-cols-4 gap-x-3 gap-y-1 py-2">
       <div class="col-span-2">
@@ -41,7 +40,7 @@
       </div>
     </div>
     <div class="flex px-4 py-3 items-center">
-      <div class="text-lg">Mascotas</div>
+      <div class="text-lg">Mascotas ({{ pets.controls.length }})</div>
       <div class="flex-1"></div>
       <div>
         <button mat-mini-fab aria-label="Add pet button" (click)="add()">
@@ -67,8 +66,8 @@
               <div class="w-2/5">
                 <image-uploader
                   [preview]="petsList()[i].image"
-                  [file]="petsList()[i].file"
                   (fileChange)="selectImage($event, i)"
+                  (onImageRemoved)="removeImage(i)"
                 />
               </div>
               <div class="w-3/5">

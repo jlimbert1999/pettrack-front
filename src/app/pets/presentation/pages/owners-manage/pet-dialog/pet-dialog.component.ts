@@ -30,7 +30,7 @@ import { forkJoin, map, of, switchMap } from 'rxjs';
 
 import { FileService, ImageUploaderComponent } from '../../../../../shared';
 import { CustomFormValidators } from '../../../../../../helpers';
-import { PetService } from '../../../services/pet.service';
+import { OwnersService } from '../../../services/owners.service';
 import { owner } from '../../../../infrastructure';
 
 interface petProps {
@@ -62,7 +62,7 @@ interface petProps {
 export class PetDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private fileService = inject(FileService);
-  private petService = inject(PetService);
+  private petService = inject(OwnersService);
   private dialogRef = inject(MatDialogRef<PetDialogComponent>);
 
   readonly species = ['felino', 'canino'];
@@ -94,7 +94,7 @@ export class PetDialogComponent implements OnInit {
     const subscription = this._createFileUploadTask().pipe(
       switchMap((files) => {
         const { pets, ...props } = this.formOwner.value;
-        const completedForm = {
+        const newForm = {
           ...props,
           pets: pets?.map((pet, index) => ({
             id: this.petsList()[index].id,
@@ -102,10 +102,9 @@ export class PetDialogComponent implements OnInit {
             ...pet,
           })),
         };
-        console.log(completedForm);
         return this.data
-          ? this.petService.update(this.data.id, completedForm)
-          : this.petService.create(completedForm);
+          ? this.petService.update(this.data.id, newForm)
+          : this.petService.create(newForm);
       })
     );
     subscription.subscribe((resp) => {
@@ -117,7 +116,7 @@ export class PetDialogComponent implements OnInit {
     this.pets.push(
       this.formBuilder.group({
         name: ['', Validators.required],
-        age: ['', Validators.required],
+        age: [1, Validators.required],
         species: ['', Validators.required],
         breed: ['', Validators.required],
         color: ['', Validators.required],
@@ -130,7 +129,7 @@ export class PetDialogComponent implements OnInit {
     this.petsList.update((values) => [...values, { image: null }]);
   }
 
-  remove(index: number) {
+  remove(index: number): void {
     this.pets.removeAt(index);
     this.petsList.update((values) => {
       values.splice(index, 1);
@@ -139,11 +138,12 @@ export class PetDialogComponent implements OnInit {
   }
 
   selectImage(event: File | undefined, index: number) {
-    console.log(event);
     this.petsList()[index].file = event;
-    // if (!event) {
-    //   this.petsList[index].image = null;
-    // }
+  }
+
+  removeImage(index: number): void {
+    this.petsList()[index].file = undefined;
+    this.petsList()[index].image = null;
   }
 
   get pets() {
