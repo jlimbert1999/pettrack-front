@@ -1,2 +1,4 @@
 export * from './interfaces/owner.interface';
+export * from './interfaces/pet.interface';
 export * from './mappers/owner.mapper';
+export * from './mappers/pet.mapper';

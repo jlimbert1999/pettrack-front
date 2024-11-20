@@ -95,10 +95,18 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   getData(): void {
-    this.petService.findAll().subscribe(({ owners, length }) => {
-      this.datasource.set(owners);
-      this.datasize.set(length);
-    });
+    this.petService
+      .findAll(this.limit(), this.offset(), this.term())
+      .subscribe(({ owners, length }) => {
+        this.datasource.set(owners);
+        this.datasize.set(length);
+      });
+  }
+
+  search(term: string) {
+    this.term.set(term);
+    this.index.set(0);
+    this.getData();
   }
 
   onPageChange({ pageIndex, pageSize }: PageEvent) {

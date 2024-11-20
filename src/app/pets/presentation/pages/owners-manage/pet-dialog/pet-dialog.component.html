@@ -1,6 +1,5 @@
 <h2 mat-dialog-title>{{ data ? "Editar" : "Crear" }} Propietario</h2>
 <mat-dialog-content>
-  {{ form.value | json }}
   <form [formGroup]="form">
     <mat-stepper formArrayName="steps">
       <mat-step
@@ -46,8 +45,8 @@
             </mat-form-field>
           </div>
         </div>
-        <div>
-          <button mat-button matStepperNext type="button">Next</button>
+        <div class="flex justify-end">
+          <button mat-button matStepperNext type="button">Siguiente</button>
         </div>
       </mat-step>
       <mat-step
@@ -59,7 +58,7 @@
           <div class="text-lg">Mascotas</div>
           <div class="flex-1"></div>
           <div>
-            <button mat-mini-fab aria-label="Add pet button" (click)="add()">
+            <button mat-mini-fab aria-label="Add pet button" (click)="addPet()">
               <mat-icon>add</mat-icon>
             </button>
           </div>
@@ -72,7 +71,7 @@
                   mat-icon-button
                   aria-label="Remove pet"
                   matTooltip="Remover"
-                  (click)="remove(i)"
+                  (click)="removePet(i)"
                 >
                   <mat-icon>delete</mat-icon>
                 </button>
@@ -181,9 +180,8 @@
             </div>
           </div>
         </div>
-        <div>
-          <button mat-button matStepperPrevious type="button">Back</button>
-          <button mat-button matStepperNext type="button">Next</button>
+        <div class="flex justify-end py-3">
+          <button mat-button matStepperPrevious type="button">Atras</button>
         </div>
       </mat-step>
       ...
@@ -192,7 +190,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-button (click)="save()">
-    Guardar
-  </button>
+  <button mat-button (click)="save()" [disabled]="form.invalid">Guardar</button>
 </mat-dialog-actions>

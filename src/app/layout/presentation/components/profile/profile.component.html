@@ -1,0 +1,20 @@
+<div class="p-4 pb-3 bg-gray-50">
+  <div class="flex flex-col gap-y-2 items-center pb-4">
+    <img
+      class="h-auto rounded-full w-14"
+      src="images/user.png"
+      alt="User image"
+    />
+    <span class="text-lg leading-8">
+      {{ user?.fullname | titlecase }}
+    </span>
+  </div>
+
+  <mat-action-list>
+    <mat-divider></mat-divider>
+    <button mat-list-item routerLink="home" (click)="logout()">
+      <mat-icon matListItemIcon>logout</mat-icon>
+      <div matListItemTitle>Cerrar sesion</div>
+    </button>
+  </mat-action-list>
+</div>

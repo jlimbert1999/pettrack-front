@@ -7,10 +7,10 @@ export interface owner {
   address: string;
   phone: string;
   createdAt: Date;
-  pets: pet[];
+  pets: partialPet[];
 }
 
-export interface pet {
+interface partialPet {
   id: string;
   name: string;
   code: number;

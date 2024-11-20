@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
+  FormGroup,
   Validators,
   FormBuilder,
   ReactiveFormsModule,
-  AbstractControl,
-  FormGroup,
-  FormControl,
 } from '@angular/forms';
 import {
   inject,
@@ -35,18 +33,7 @@ import { FileService, ImageUploaderComponent } from '../../../../../shared';
 import { CustomFormValidators } from '../../../../../../helpers';
 import { OwnersService } from '../../../services/owners.service';
 import { owner } from '../../../../infrastructure';
-
-interface petFormProps {
-  name: FormControl<string >;
-  age: FormControl<number >;
-  species: FormControl<string >;
-  breed: FormControl<string >;
-  color: FormControl<string >;
-  sex: FormControl<string >;
-  is_neutered: FormControl<boolean >;
-  neuter_date: FormControl<string >;
-  description: FormControl<string >;
-}
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 interface petProps {
   id?: string;
@@ -73,7 +60,13 @@ interface petProps {
   ],
   templateUrl: './pet-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideNativeDateAdapter()],
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true },
+    },
+  ],
 })
 export class PetDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -96,7 +89,7 @@ export class PetDialogComponent implements OnInit {
         dni: ['', Validators.required],
         address: [''],
       }),
-      this.formBuilder.array<petFormProps[]>(
+      this.formBuilder.array<FormGroup<any>[]>(
         [],
         CustomFormValidators.minLengthArray(1)
       ),
@@ -131,28 +124,29 @@ export class PetDialogComponent implements OnInit {
     });
   }
 
-  add(): void {
-    // const form: FormGroup<petFormProps> = this.formBuilder.group({
-    //   name: ['', Validators.required],
-    //   age: [1, Validators.required],
-    //   species: ['', Validators.required],
-    //   breed: ['', Validators.required],
-    //   color: ['', Validators.required],
-    //   sex: ['', Validators.required],
-    //   is_neutered: [false],
-    //   neuter_date: [null],
-    //   description: [''],
-    // });
-    // this.petsFormArray.push(form);
-    // this.petsList.update((values) => [...values, { image: null }]);
+  addPet(): void {
+    this.petsFormArray.push(
+      this.formBuilder.group({
+        name: ['', Validators.required],
+        age: [1, Validators.required],
+        species: ['', Validators.required],
+        breed: ['', Validators.required],
+        color: ['', Validators.required],
+        sex: ['', Validators.required],
+        is_neutered: [false],
+        neuter_date: [null],
+        description: [''],
+      })
+    );
+    this.petsList.update((values) => [...values, { image: null }]);
   }
 
-  remove(index: number): void {
-    // this.pets.removeAt(index);
-    // this.petsList.update((values) => {
-    //   values.splice(index, 1);
-    //   return [...values];
-    // });
+  removePet(index: number): void {
+    this.petsFormArray.removeAt(index);
+    this.petsList.update((values) => {
+      values.splice(index, 1);
+      return [...values];
+    });
   }
 
   selectImage(event: File | undefined, index: number) {
@@ -173,7 +167,7 @@ export class PetDialogComponent implements OnInit {
   }
 
   get petsFormArray() {
-    return this.steps.at(1) as FormArray<FormGroup<petFormProps>>;
+    return this.steps.at(1) as FormArray<FormGroup<any>>;
   }
 
   private _createFileUploadTask() {
@@ -189,12 +183,14 @@ export class PetDialogComponent implements OnInit {
     );
   }
 
-  private _loadForm() {
+  private _loadForm(): void {
     if (!this.data) return;
-    this.data.pets.forEach(({ id, image }, index) => {
-      this.add();
+    const { pets, ...props } = this.data;
+    pets.forEach(({ id, image }, index) => {
+      this.addPet();
       this.petsList()[index] = { id, image };
     });
-    // this.formOwner.patchValue(this.data);
+    this.ownerFormGroup.patchValue(props);
+    this.petsFormArray.patchValue(pets);
   }
 }
