@@ -1,6 +1,13 @@
 @use "@angular/material" as mat;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 @include mat.core();
+
+
+
 
 $angular-material-3-theme: mat.define-theme(
   (
@@ -10,7 +17,7 @@ $angular-material-3-theme: mat.define-theme(
       tertiary: mat.$blue-palette,
     ),
     density: (
-      scale: -1,
+      scale: -2,
     ),
   )
 );
@@ -19,9 +26,6 @@ $angular-material-3-theme: mat.define-theme(
   @include mat.all-component-themes($angular-material-3-theme);
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
   .mdc-notched-outline__notch {

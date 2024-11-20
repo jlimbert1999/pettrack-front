@@ -4,6 +4,9 @@ import {
   Validators,
   FormBuilder,
   ReactiveFormsModule,
+  AbstractControl,
+  FormGroup,
+  FormControl,
 } from '@angular/forms';
 import {
   inject,
@@ -33,6 +36,18 @@ import { CustomFormValidators } from '../../../../../../helpers';
 import { OwnersService } from '../../../services/owners.service';
 import { owner } from '../../../../infrastructure';
 
+interface petFormProps {
+  name: FormControl<string >;
+  age: FormControl<number >;
+  species: FormControl<string >;
+  breed: FormControl<string >;
+  color: FormControl<string >;
+  sex: FormControl<string >;
+  is_neutered: FormControl<boolean >;
+  neuter_date: FormControl<string >;
+  description: FormControl<string >;
+}
+
 interface petProps {
   id?: string;
   file?: File;
@@ -53,6 +68,7 @@ interface petProps {
     MatDialogModule,
     MatInputModule,
     MatIconModule,
+    MatStepperModule,
     ImageUploaderComponent,
   ],
   templateUrl: './pet-dialog.component.html',
@@ -70,17 +86,21 @@ export class PetDialogComponent implements OnInit {
 
   data?: owner = inject(MAT_DIALOG_DATA);
 
-  formOwner = this.formBuilder.group({
-    first_name: ['', Validators.required],
-    middle_name: ['', Validators.required],
-    last_name: [''],
-    phone: [''],
-    dni: ['', Validators.required],
-    address: [''],
-    pets: this.formBuilder.array<any[]>(
-      [],
-      CustomFormValidators.minLengthArray(1)
-    ),
+  form = this.formBuilder.group({
+    steps: this.formBuilder.array([
+      this.formBuilder.group({
+        first_name: ['', Validators.required],
+        middle_name: ['', Validators.required],
+        last_name: [''],
+        phone: [''],
+        dni: ['', Validators.required],
+        address: [''],
+      }),
+      this.formBuilder.array<petFormProps[]>(
+        [],
+        CustomFormValidators.minLengthArray(1)
+      ),
+    ]),
   });
 
   petsList = signal<petProps[]>([]);
@@ -90,13 +110,12 @@ export class PetDialogComponent implements OnInit {
   }
 
   save(): void {
-    if (this.formOwner.invalid) return;
+    if (this.form.invalid) return;
     const subscription = this._createFileUploadTask().pipe(
       switchMap((files) => {
-        const { pets, ...props } = this.formOwner.value;
         const newForm = {
-          ...props,
-          pets: pets?.map((pet, index) => ({
+          ...this.ownerFormGroup.value,
+          pets: this.petsFormArray.value.map((pet, index: number) => ({
             id: this.petsList()[index].id,
             image: files[index],
             ...pet,
@@ -113,28 +132,27 @@ export class PetDialogComponent implements OnInit {
   }
 
   add(): void {
-    this.pets.push(
-      this.formBuilder.group({
-        name: ['', Validators.required],
-        age: [1, Validators.required],
-        species: ['', Validators.required],
-        breed: ['', Validators.required],
-        color: ['', Validators.required],
-        sex: ['', Validators.required],
-        is_neutered: [false],
-        neuter_date: [null],
-        description: [''],
-      })
-    );
-    this.petsList.update((values) => [...values, { image: null }]);
+    // const form: FormGroup<petFormProps> = this.formBuilder.group({
+    //   name: ['', Validators.required],
+    //   age: [1, Validators.required],
+    //   species: ['', Validators.required],
+    //   breed: ['', Validators.required],
+    //   color: ['', Validators.required],
+    //   sex: ['', Validators.required],
+    //   is_neutered: [false],
+    //   neuter_date: [null],
+    //   description: [''],
+    // });
+    // this.petsFormArray.push(form);
+    // this.petsList.update((values) => [...values, { image: null }]);
   }
 
   remove(index: number): void {
-    this.pets.removeAt(index);
-    this.petsList.update((values) => {
-      values.splice(index, 1);
-      return [...values];
-    });
+    // this.pets.removeAt(index);
+    // this.petsList.update((values) => {
+    //   values.splice(index, 1);
+    //   return [...values];
+    // });
   }
 
   selectImage(event: File | undefined, index: number) {
@@ -146,8 +164,16 @@ export class PetDialogComponent implements OnInit {
     this.petsList()[index].image = null;
   }
 
-  get pets() {
-    return this.formOwner.get('pets') as FormArray;
+  get steps() {
+    return this.form.get('steps') as FormArray;
+  }
+
+  get ownerFormGroup() {
+    return this.steps.at(0) as FormGroup;
+  }
+
+  get petsFormArray() {
+    return this.steps.at(1) as FormArray<FormGroup<petFormProps>>;
   }
 
   private _createFileUploadTask() {
@@ -169,6 +195,6 @@ export class PetDialogComponent implements OnInit {
       this.add();
       this.petsList()[index] = { id, image };
     });
-    this.formOwner.patchValue(this.data);
+    // this.formOwner.patchValue(this.data);
   }
 }

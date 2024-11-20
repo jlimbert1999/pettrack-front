@@ -1,30 +1,40 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     #drawer
-    class="sidenav"
+    class="sidenav px-3"
     fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false"
   >
     <mat-toolbar>Menu</mat-toolbar>
-    <div class="flex items-center">
-      <img class="w-10 h-10 rounded-full mr-4" src="images/icons/app-icon.png" alt="Avatar of Jonathan Reinink">
-      <div class="text-sm">
-        <p class="text-gray-900 leading-none">Jonathan Reinink</p>
-        <p class="text-gray-600">Aug 18</p>
-      </div>
-    </div>
     <mat-nav-list>
-      <a mat-list-item routerLink="owners">Propietarios</a>
-      <a mat-list-item routerLink="pets">Mascotas</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a
+        class="sidebar-link mb-2"
+        mat-list-item
+        routerLink="owners"
+        #link="routerLinkActive"
+        routerLinkActive
+        [activated]="link.isActive"
+      >
+        <mat-icon matListItemIcon>person</mat-icon>
+        Propietarios
+      </a>
+      <a
+        class="sidebar-link mb-2"
+        mat-list-item
+        routerLink="pets"
+        #link="routerLinkActive"
+        routerLinkActive
+      >
+        <mat-icon matListItemIcon> pets</mat-icon>
+        Mascotas
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    @if (isHandset$ | async) {
     <mat-toolbar color="primary">
+      @if (isHandset$ | async) {
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -33,13 +43,9 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
+      }
       <span>pettrack-front</span>
     </mat-toolbar>
-    }
-
-    <!-- Add Content Here -->
-    <div>
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
