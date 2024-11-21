@@ -16,6 +16,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./layout/presentation/pages/home/home.component'),
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'owners' },
       {
         title: 'Propietarios',
         path: 'owners',
@@ -44,6 +45,28 @@ export const routes: Routes = [
         loadComponent: () =>
           import(
             './users/presentation/pages/users-manage/users-manage.component'
+          ),
+      },
+      {
+        title: 'Centros',
+        path: 'centers',
+        loadComponent: () =>
+          import(
+            './administration/presentation/pages/medical-centers-manage/medical-centers-manage.component'
+          ),
+      },
+      {
+        path: 'treatments',
+        loadComponent: () =>
+          import(
+            './administration/presentation/pages/types-treatments-manage/types-treatments-manage.component'
+          ),
+      },
+      {
+        path: 'breeds',
+        loadComponent: () =>
+          import(
+            './administration/presentation/pages/breeds-manage/breeds-manage.component'
           ),
       },
     ],

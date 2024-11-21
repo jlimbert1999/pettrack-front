@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { owner, OwnerMapper } from '../../infrastructure';
-import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

@@ -17,8 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PetDialogComponent } from './pet-dialog/pet-dialog.component';
 import { OwnersService } from '../../services/owners.service';
-import { Owner } from '../../../domain';
 import { SearchInputComponent } from '../../../../shared';
+import { Owner } from '../../../domain';
 
 @Component({
   selector: 'app-owners-manage',

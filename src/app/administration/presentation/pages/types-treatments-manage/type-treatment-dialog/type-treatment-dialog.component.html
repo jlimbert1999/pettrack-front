@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ data ? "Edicion" : "Creacion" }} Tratamiento</h2>
+<mat-dialog-content>
+  <form [formGroup]="formCenter" class="py-2">
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="category">
+        @for (category of categories; track $index) {
+        <mat-option [value]="category.value">{{ category.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="warn" mat-dialog-close>Cancelar</button>
+  <button
+    mat-button
+    color="primary"
+    [disabled]="formCenter.invalid"
+    (click)="save()"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>
