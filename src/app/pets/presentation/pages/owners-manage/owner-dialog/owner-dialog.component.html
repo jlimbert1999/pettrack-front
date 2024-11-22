@@ -86,7 +86,7 @@
                 </div>
                 <div class="w-3/5">
                   <div
-                    class="grid grid-cols-2 gap-x-3 gap-y-1"
+                    class="grid grid-cols-3 gap-x-3 gap-y-1"
                     [formGroupName]="i"
                   >
                     <div class="col-span-2">
@@ -97,21 +97,27 @@
                     </div>
                     <div>
                       <mat-form-field appearance="outline">
-                        <mat-label>Edad</mat-label>
+                        <mat-label>Nacimiento</mat-label>
                         <input
                           matInput
-                          type="number"
-                          min="0"
-                          max="20"
-                          formControlName="age"
+                          [matDatepicker]="pickerBirth"
+                          formControlName="birthDate"
                         />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="pickerBirth"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #pickerBirth></mat-datepicker>
                       </mat-form-field>
                     </div>
-                    <div>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Raza</mat-label>
-                        <input matInput formControlName="breed" />
-                      </mat-form-field>
+                    <div class="col-span-3">
+                      <simple-select-search
+                        [value]="petsFormArray.at(i).get('breedId')?.value"
+                        [elements]="breeds()!"
+                        (onSelect)="
+                          petsFormArray.at(i).get('breedId')?.setValue($event)
+                        "
+                      />
                     </div>
                     <div>
                       <mat-form-field appearance="outline">
@@ -132,27 +138,13 @@
                       </mat-form-field>
                     </div>
                     <div>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Especie</mat-label>
-                        <mat-select formControlName="species">
-                          @for (element of species; track $index) {
-                          <mat-option [value]="element">
-                            {{ element | uppercase }}
-                          </mat-option>
-                          }
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                    <div>
                       <mat-checkbox formControlName="is_neutered" #neutered>
-                        {{
-                          neutered.checked ? "Esterilizado" : "Sin Esterilizar"
-                        }}
+                        Esterilizado
                       </mat-checkbox>
                     </div>
                     <div>
                       <mat-form-field appearance="outline">
-                        <mat-label>Fecha Esterilización</mat-label>
+                        <mat-label>Esterilización</mat-label>
                         <input
                           matInput
                           [matDatepicker]="picker"
@@ -180,11 +172,13 @@
             </div>
           </div>
         </div>
+        @if(petsFormArray.length===0){
+        <div class="py-6 px-4 font-medium">SIN REGISTROS</div>
+        }
         <div class="flex justify-end py-3">
           <button mat-button matStepperPrevious type="button">Atras</button>
         </div>
       </mat-step>
-      ...
     </mat-stepper>
   </form>
 </mat-dialog-content>

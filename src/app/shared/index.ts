@@ -1,4 +1,6 @@
 export * from "./components/image-uploader/image-uploader.component"
 export * from "./components/search-input/search-input.component"
 export * from "./components/image-loader/image-loader.component"
+export * from "./components/simple-select-search/simple-select-search.component"
 export * from "./services/file.service"
+export * from "./services/pdf.service"

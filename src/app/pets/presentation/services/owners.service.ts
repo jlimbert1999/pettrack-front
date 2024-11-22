@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { owner, OwnerMapper } from '../../infrastructure';
@@ -14,11 +14,15 @@ export class OwnersService {
   constructor(private http: HttpClient) {}
 
   create(form: Object) {
-    return this.http.post<owner>(this.url, form);
+    return this.http
+      .post<owner>(this.url, form)
+      .pipe(map((resp) => OwnerMapper.fromResponse(resp)));
   }
 
   update(id: string, form: Object) {
-    return this.http.patch<owner>(`${this.url}/${id}`, form);
+    return this.http
+      .patch<owner>(`${this.url}/${id}`, form)
+      .pipe(map((resp) => OwnerMapper.fromResponse(resp)));
   }
 
   findAll(limit: number, offset: number, term?: string) {
@@ -28,6 +32,7 @@ export class OwnersService {
     return this.http
       .get<{ owners: owner[]; length: number }>(this.url, { params })
       .pipe(
+        tap((resp) => console.log(resp)),
         map(({ owners, length }) => ({
           owners: owners.map((el) => OwnerMapper.fromResponse(el)),
           length,

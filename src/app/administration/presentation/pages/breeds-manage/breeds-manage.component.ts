@@ -65,13 +65,13 @@ export default class BreedsManageComponent {
     });
   }
 
-  update(data: typeTreatment) {
+  update(data: breed) {
     const dialogRef = this.dialog.open(BreedDialogComponent, {
       width: '600px',
       maxWidth: '600px',
       data,
     });
-    dialogRef.afterClosed().subscribe((result: medicalCenter) => {
+    dialogRef.afterClosed().subscribe((result: breed) => {
       if (!result) return;
       this.datasource.update((values) => {
         const index = values.findIndex((inst) => inst.id === result.id);

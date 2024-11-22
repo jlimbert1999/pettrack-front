@@ -17,7 +17,7 @@
         >
           <div class="w-full sm:w-2/5">
             <div class="flex justify-center">
-              <image-loader [url]="pet()?.image!" />
+              <image-loader [url]="pet()!.image" />
             </div>
           </div>
           <div class="w-full sm:w-3/5">
@@ -40,19 +40,11 @@
                   </dd>
                 </div>
                 <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Especie</dt>
-                  <dd
-                    class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
-                  >
-                    {{ pet()?.species }}
-                  </dd>
-                </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">Raza</dt>
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
                   >
-                    {{ pet()?.breed }}
+                    {{ pet()?.breed?.species }} - {{ pet()?.breed?.name }}
                   </dd>
                 </div>
                 <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -64,6 +56,14 @@
                   </dd>
                 </div>
                 <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt class="text-sm/6 font-medium text-gray-900">Años</dt>
+                  <dd
+                    class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
+                  >
+                    {{ pet()?.calculateAge() }}
+                  </dd>
+                </div>
+                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Macho/Hembra
                   </dt>
@@ -71,16 +71,6 @@
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
                   >
                     {{ pet()?.sex }}
-                  </dd>
-                </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">
-                    Propietario
-                  </dt>
-                  <dd
-                    class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
-                  >
-                    {{ pet()?.fullnameOwner }}
                   </dd>
                 </div>
                 <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -100,7 +90,7 @@
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
                   >
-                    {{ pet()?.neuter_date ?? "Pendiente" }}
+                    {{ (pet()?.neuter_date | date : "short") ?? "-----" }}
                   </dd>
                 </div>
                 <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -111,6 +101,16 @@
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
                   >
                     {{ pet()?.createdAt | date : "short" }}
+                  </dd>
+                </div>
+                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt class="text-sm/6 font-medium text-gray-900">
+                    Propietario
+                  </dt>
+                  <dd
+                    class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
+                  >
+                    {{ pet()?.fullnameOwner }}
                   </dd>
                 </div>
               </dl>

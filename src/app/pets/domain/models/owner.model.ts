@@ -13,19 +13,25 @@ interface pet {
   id: string;
   name: string;
   code: number;
-  age: number;
   species: string;
   image: null | string;
-  breed: string;
   color: string;
   sex: string;
   createdAt: Date;
+  birthDate: Date;
   description: string;
   is_neutered: boolean;
   neuter_date: Date | null;
+  breed: breed;
 }
 
-export class Owner {
+interface breed {
+  id: number;
+  name: string;
+  species: string;
+}
+
+export class Owner implements ownerProps {
   id: string;
   first_name: string;
   middle_name: string;
@@ -35,7 +41,6 @@ export class Owner {
   phone: string;
   createdAt: Date;
   pets: pet[];
-
   constructor({
     id,
     first_name,

@@ -13,9 +13,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 
-import { PetsService } from '../../../services/pets.service';
-import { Pet } from '../../../../domain';
 import { ImageLoaderComponent } from '../../../../../shared';
+import { PetsService } from '../../../services';
+import { Pet } from '../../../../domain';
 
 @Component({
   selector: 'app-pet-detail',

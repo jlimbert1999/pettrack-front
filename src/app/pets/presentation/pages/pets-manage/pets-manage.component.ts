@@ -13,8 +13,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
-import { PetsService } from '../../services/pets.service';
 import { SearchInputComponent } from '../../../../shared';
+import { PetsService } from '../../services';
 import { Pet } from '../../../domain';
 
 @Component({
@@ -44,12 +44,12 @@ export default class PetsManageComponent implements OnInit {
   term = signal<string>('');
 
   readonly displayedColumns = [
-    'detail',
     'owner',
     'code',
     'name',
     'species',
     'date',
+    'detail',
     'options',
   ];
 
@@ -65,8 +65,6 @@ export default class PetsManageComponent implements OnInit {
         this.datasize.set(length);
       });
   }
-
-  detail() {}
 
   search(term: string) {
     this.term.set(term);

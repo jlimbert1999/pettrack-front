@@ -18,22 +18,30 @@ import {
   MatDialogModule,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
+import { toSignal } from '@angular/core/rxjs-interop';
+
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+
 import { forkJoin, map, of, switchMap } from 'rxjs';
 
-import { FileService, ImageUploaderComponent } from '../../../../../shared';
+import {
+  FileService,
+  SimpleSelectOption,
+  ImageUploaderComponent,
+  SimpleSelectSearchComponent,
+} from '../../../../../shared';
 import { CustomFormValidators } from '../../../../../../helpers';
-import { OwnersService } from '../../../services/owners.service';
-import { owner } from '../../../../infrastructure';
-import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { OwnersService, PetsService } from '../../../services/';
+import { Owner } from '../../../../domain';
 
 interface petProps {
   id?: string;
@@ -41,7 +49,7 @@ interface petProps {
   image: string | null;
 }
 @Component({
-  selector: 'pet-dialog',
+  selector: 'owner-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -57,8 +65,9 @@ interface petProps {
     MatIconModule,
     MatStepperModule,
     ImageUploaderComponent,
+    SimpleSelectSearchComponent,
   ],
-  templateUrl: './pet-dialog.component.html',
+  templateUrl: './owner-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     provideNativeDateAdapter(),
@@ -68,16 +77,27 @@ interface petProps {
     },
   ],
 })
-export class PetDialogComponent implements OnInit {
+export class OwnerDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private fileService = inject(FileService);
-  private petService = inject(OwnersService);
-  private dialogRef = inject(MatDialogRef<PetDialogComponent>);
+  private ownerService = inject(OwnersService);
+  private petService = inject(PetsService);
+  private dialogRef = inject(MatDialogRef<OwnerDialogComponent>);
 
-  readonly species = ['felino', 'canino'];
+  breeds = toSignal<SimpleSelectOption<number>[]>(
+    this.petService.getBreeds().pipe(
+      map((resp) =>
+        resp.map((breed) => ({
+          value: breed.id,
+          text: `${breed.species} - ${breed.name}`,
+        }))
+      )
+    )
+  );
+
   readonly animalSex = ['macho', 'hembra'];
 
-  data?: owner = inject(MAT_DIALOG_DATA);
+  data?: Owner = inject(MAT_DIALOG_DATA);
 
   form = this.formBuilder.group({
     steps: this.formBuilder.array([
@@ -115,8 +135,8 @@ export class PetDialogComponent implements OnInit {
           })),
         };
         return this.data
-          ? this.petService.update(this.data.id, newForm)
-          : this.petService.create(newForm);
+          ? this.ownerService.update(this.data.id, newForm)
+          : this.ownerService.create(newForm);
       })
     );
     subscription.subscribe((resp) => {
@@ -128,14 +148,13 @@ export class PetDialogComponent implements OnInit {
     this.petsFormArray.push(
       this.formBuilder.group({
         name: ['', Validators.required],
-        age: [1, Validators.required],
-        species: ['', Validators.required],
-        breed: ['', Validators.required],
+        breedId: ['', Validators.required],
         color: ['', Validators.required],
         sex: ['', Validators.required],
         is_neutered: [false],
+        birthDate: [null],
         neuter_date: [null],
-        description: [''],
+        description: [null],
       })
     );
     this.petsList.update((values) => [...values, { image: null }]);
@@ -191,6 +210,8 @@ export class PetDialogComponent implements OnInit {
       this.petsList()[index] = { id, image };
     });
     this.ownerFormGroup.patchValue(props);
-    this.petsFormArray.patchValue(pets);
+    this.petsFormArray.patchValue(
+      pets.map(({ breed, ...props }) => ({ ...props, breedId: breed.id }))
+    );
   }
 }

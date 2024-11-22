@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs';
+
 import { environment } from '../../../../environments/environment';
 import { pet, PetMapper } from '../../infrastructure';
-import { map } from 'rxjs';
+import { breed } from '../../../administration/infrastructure';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +32,12 @@ export class PetsService {
     return this.http
       .get<pet>(`${this.url}/${id}`)
       .pipe(map((resp) => PetMapper.fromResponse(resp)));
+  }
+
+  getBreeds(species?: string) {
+    const params = new HttpParams({
+      fromObject: { ...(species && { species }) },
+    });
+    return this.http.get<breed[]>(`${this.url}/types/breeds`, { params });
   }
 }

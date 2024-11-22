@@ -14,19 +14,6 @@
   <div class="p-3">
     <div class="mat-elevation-z2">
       <table mat-table [dataSource]="datasource()">
-        <ng-container matColumnDef="detail">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element" class="w-8">
-            <button
-              mat-icon-button
-              aria-label="Show details"
-              [routerLink]="['../pets', element.id]"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="code">
           <th mat-header-cell *matHeaderCellDef>Codigo</th>
           <td mat-cell *matCellDef="let element">
@@ -55,6 +42,19 @@
           <th mat-header-cell *matHeaderCellDef>Registro</th>
           <td mat-cell *matCellDef="let element">
             {{ element.createdAt | date : "short" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detail">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" class="w-8">
+            <button
+              mat-icon-button
+              aria-label="Show details"
+              [routerLink]="['../pets', element.id]"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
           </td>
         </ng-container>
 

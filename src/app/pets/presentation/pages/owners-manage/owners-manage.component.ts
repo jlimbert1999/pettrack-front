@@ -15,9 +15,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 
-import { PetDialogComponent } from './pet-dialog/pet-dialog.component';
+import { OwnerDialogComponent } from './owner-dialog/owner-dialog.component';
 import { OwnersService } from '../../services/owners.service';
-import { SearchInputComponent } from '../../../../shared';
+import { PdfService, SearchInputComponent } from '../../../../shared';
 import { Owner } from '../../../domain';
 
 @Component({
@@ -39,6 +39,7 @@ import { Owner } from '../../../domain';
 export default class OwnersManageComponent implements OnInit {
   private petService = inject(OwnersService);
   private readonly dialog = inject(MatDialog);
+  private pdfService = inject(PdfService);
 
   datasource = signal<Owner[]>([]);
   datasize = signal<number>(10);
@@ -62,9 +63,9 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   create(): void {
-    const dialogRef = this.dialog.open(PetDialogComponent, {
-      width: '1100px',
-      maxWidth: '1100px',
+    const dialogRef = this.dialog.open(OwnerDialogComponent, {
+      width: '1200px',
+      maxWidth: '1200px',
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
@@ -79,7 +80,7 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   update(owner: Owner) {
-    const dialogRef = this.dialog.open(PetDialogComponent, {
+    const dialogRef = this.dialog.open(OwnerDialogComponent, {
       width: '1100px',
       maxWidth: '1100px',
       data: owner,
@@ -113,5 +114,9 @@ export default class OwnersManageComponent implements OnInit {
     this.limit.set(pageSize);
     this.index.set(pageIndex);
     this.getData();
+  }
+
+  generatePetSheet() {
+    this.pdfService.generatePetSheet();
   }
 }

@@ -1,12 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   input,
   model,
   OnInit,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -65,6 +67,7 @@ import { FileService } from '../../services/file.service';
 })
 export class ImageUploaderComponent implements OnInit {
   private postService = inject(FileService);
+  imageInput = viewChild.required<ElementRef<HTMLInputElement>>('imageInput');
 
   preview = input<string | null | undefined>(null);
   onImageRemoved = output<void>();
@@ -90,6 +93,7 @@ export class ImageUploaderComponent implements OnInit {
   remove(): void {
     this.file.set(undefined);
     this.url.set(null);
+    this.imageInput().nativeElement.value = '';
     this.onImageRemoved.emit();
   }
 

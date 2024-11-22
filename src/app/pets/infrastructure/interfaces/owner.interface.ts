@@ -6,7 +6,7 @@ export interface owner {
   dni: string;
   address: string;
   phone: string;
-  createdAt: Date;
+  createdAt: string;
   pets: partialPet[];
 }
 
@@ -14,14 +14,20 @@ interface partialPet {
   id: string;
   name: string;
   code: number;
-  age: number;
   species: string;
   image: null | string;
-  breed: string;
   color: string;
   sex: string;
-  createdAt: Date;
+  createdAt: string;
   description: string;
   is_neutered: boolean;
   neuter_date: Date | null;
+  breed: partialBreed;
+  birthDate: string;
+}
+
+interface partialBreed {
+  id: number;
+  name: string;
+  species: string;
 }

@@ -2,17 +2,17 @@ export interface pet {
   id: string;
   name: string;
   code: number;
-  age: number;
   species: string;
-  image: null;
-  breed: string;
+  image: null | string;
   color: string;
   sex: string;
-  createdAt: Date;
+  createdAt: string;
   description: string;
   is_neutered: boolean;
   neuter_date: null;
   owner: partialOwner;
+  breed: partialBreed;
+  birthDate: string;
 }
 
 interface partialOwner {
@@ -24,4 +24,10 @@ interface partialOwner {
   address: string;
   phone: string;
   createdAt: Date;
+}
+
+interface partialBreed {
+  id: number;
+  name: string;
+  species: string;
 }

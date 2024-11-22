@@ -2,10 +2,9 @@ interface petProps {
   id: string;
   name: string;
   code: number;
-  age: number;
   species: string;
-  image: null;
-  breed: string;
+  image: null | string;
+  breed: breed;
   color: string;
   sex: string;
   createdAt: Date;
@@ -13,6 +12,7 @@ interface petProps {
   is_neutered: boolean;
   neuter_date: null;
   owner: onwer;
+  birthDate: Date;
 }
 
 interface onwer {
@@ -26,14 +26,19 @@ interface onwer {
   createdAt: Date;
 }
 
-export class Pet {
+interface breed {
+  name: string;
+  species: string;
+}
+
+export class Pet implements petProps {
   id: string;
   name: string;
   code: number;
   age: number;
   species: string;
-  image: null;
-  breed: string;
+  image: null | string;
+  breed: breed;
   color: string;
   sex: string;
   createdAt: Date;
@@ -41,11 +46,12 @@ export class Pet {
   is_neutered: boolean;
   neuter_date: null;
   owner: onwer;
+  birthDate: Date;
+
   constructor({
     id,
     name,
     code,
-    age,
     species,
     image,
     breed,
@@ -60,7 +66,6 @@ export class Pet {
     this.id = id;
     this.name = name;
     this.code = code;
-    this.age = age;
     this.species = species;
     this.image = image;
     this.breed = breed;
@@ -75,5 +80,16 @@ export class Pet {
 
   get fullnameOwner() {
     return `${this.owner.first_name} ${this.owner.middle_name} ${this.owner.last_name}`;
+  }
+
+  calculateAge(): string {
+    if (!this.birthDate) return 'Sin registro';
+    const today = new Date();
+    let age = today.getFullYear() - this.birthDate.getFullYear();
+    const mes = today.getMonth() - this.birthDate.getMonth();
+    if (mes < 0 || (mes === 0 && today.getDate() < this.birthDate.getDate())) {
+      age--;
+    }
+    return age.toString();
   }
 }
