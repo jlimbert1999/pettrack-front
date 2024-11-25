@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { Pet } from '../../pets/domain';
+import { convertImageABase64 } from '../../../helpers';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Injectable({
   providedIn: 'root',
@@ -10,21 +12,21 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class PdfService {
   constructor() {}
 
-  generatePetSheet() {
+  async generatePetSheet() {
     const docDefinition: TDocumentDefinitions = {
       header: [
         {
+          // margin: [20, 20, 20, 20],
           columns: [
             {
               // auto-sized columns have their widths based on their content
-              width: 'auto',
-              text: 'First column',
+              image: await convertImageABase64('/images/institution.jpg'),
+              width: 80,
             },
+            { width: 100, text: 'dsds' },
             {
-              // star-sized columns fill the remaining space
-              // if there's more than one star-column, available width is divided equally
-              width: '*',
-              text: 'Second column',
+              image: await convertImageABase64('/images/institution.jpg'),
+              width: 50,
             },
           ],
         },

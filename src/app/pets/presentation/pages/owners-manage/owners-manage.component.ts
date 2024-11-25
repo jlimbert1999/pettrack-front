@@ -21,19 +21,19 @@ import { PdfService, SearchInputComponent } from '../../../../shared';
 import { Owner } from '../../../domain';
 
 @Component({
-    selector: 'app-owners-manage',
-    imports: [
-        CommonModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        MatMenuModule,
-        MatPaginatorModule,
-        SearchInputComponent,
-    ],
-    templateUrl: './owners-manage.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-owners-manage',
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    SearchInputComponent,
+  ],
+  templateUrl: './owners-manage.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OwnersManageComponent implements OnInit {
   private petService = inject(OwnersService);
@@ -115,7 +115,7 @@ export default class OwnersManageComponent implements OnInit {
     this.getData();
   }
 
-  generatePetSheet() {
-    this.pdfService.generatePetSheet();
+  async generatePetSheet() {
+    await this.pdfService.generatePetSheet();
   }
 }

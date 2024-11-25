@@ -21,4 +21,10 @@ html {
       density: -2,
     )
   );
+
+  .overlays {
+    background: var(--mat-sys-surface-container);
+    color: var(--mat-sys-on-surface);
+    box-shadow: var(--mat-sys-level2);
+  }
 }

@@ -22,16 +22,20 @@ export type SimpleSelectOption<T> = {
   value: T;
 };
 @Component({
-    selector: 'simple-select-search',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        NgxMatSelectSearchModule,
-        MatFormFieldModule,
-        MatSelectModule,
-    ],
-    template: `
+  selector: 'simple-select-search',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgxMatSelectSearchModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
+  template: `
     <mat-form-field appearance="outline">
+      @if(label()){
+      <mat-label>{{ label() }}</mat-label>
+      }
+
       <mat-select
         [formControl]="bankCtrl"
         [placeholder]="placeholder()"
@@ -56,11 +60,12 @@ export type SimpleSelectOption<T> = {
       </mat-select>
     </mat-form-field>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimpleSelectSearchComponent<T> implements OnInit {
   private destroyRef = inject(DestroyRef);
 
+  label = input<string>();
   value = input<T>();
   elements = input.required<SimpleSelectOption<T>[]>();
   placeholder = input<string>('Buscar....');

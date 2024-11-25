@@ -76,7 +76,7 @@ export default class TypesTreatmentsManageComponent {
       maxWidth: '600px',
       data,
     });
-    dialogRef.afterClosed().subscribe((result: medicalCenter) => {
+    dialogRef.afterClosed().subscribe((result: typeTreatment) => {
       if (!result) return;
       this.datasource.update((values) => {
         const index = values.findIndex((inst) => inst.id === result.id);

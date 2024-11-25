@@ -22,6 +22,7 @@
     "@angular/router": "^19.0.0",
     "@types/pdfmake": "^0.2.9",
     "jwt-decode": "^4.0.0",
+    "ngx-infinite-scroll": "^18.0.0",
     "ngx-mat-select-search": "^7.0.8",
     "pdfmake": "^0.2.9",
     "rxjs": "~7.8.0",

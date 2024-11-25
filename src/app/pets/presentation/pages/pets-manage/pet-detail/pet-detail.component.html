@@ -22,7 +22,7 @@
           </div>
           <div class="w-full sm:w-3/5">
             <div class="px-2 sm:px-0">
-              <h3 class="text-base/7 font-semibold text-gray-900">
+              <h3 class="text-base/7 text-xl font-semibold text-gray-900">
                 {{ pet()?.name }}
               </h3>
               <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">
@@ -118,77 +118,21 @@
           </div>
         </div>
         }
-
-        <!-- <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-          <mat-tab label="Descripcion">
-            @if(pet()){
-            <div class="py-4">
-              <div class="flex items-center gap-x-8">
-                <div class="w-1/5">
-                  <div class="h-80 bg-red-200"></div>
-                </div>
-                <div class="w-4/5">
-                  <h3 class="text-base/7 font-semibold text-gray-900">
-                    {{ pet()?.name }}
-                  </h3>
-                  <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">
-                    Descripcion de la mascota
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="mt-6 border-t border-gray-100">
-              <dl class="divide-y divide-gray-100">
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Nombre</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.name }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Codigo</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.code }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Años</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.age }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Especie</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.species }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Descripcion</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.description ?? "SIn Desc" }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Raza</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.breed }}
-                  </dd>
-                </div>
-                <div class="px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt class="text-sm/6 font-medium text-gray-900">Color</dt>
-                  <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ pet()?.color }}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-            }
-          </mat-tab>
-          <mat-tab label="Vacunas">Vacunas</mat-tab>
-        </mat-tab-group> -->
       </div>
     </mat-tab>
-    <mat-tab label="Vacunas">Vacunas</mat-tab>
+    <mat-tab label="Historial">
+      <div class="p-4">
+        <mat-chip-listbox>
+          <mat-chip-option [selected]="0" [value]="null">Todos</mat-chip-option>
+          @for (category of categories(); track $index) {
+          <mat-chip-option>{{ category }}</mat-chip-option>
+          }
+        </mat-chip-listbox>
+      </div>
+
+      <div class="h-[72vh] overflow-y-scroll rounded-xl m-4" #containerRef>
+        <pet-history [history]="history()" [containerRef]="containerRef" />
+      </div>
+    </mat-tab>
   </mat-tab-group>
 </div>

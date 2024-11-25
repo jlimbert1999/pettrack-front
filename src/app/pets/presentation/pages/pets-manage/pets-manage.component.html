@@ -11,6 +11,7 @@
       />
     </div>
   </div>
+
   <div class="p-3">
     <div class="mat-elevation-z2">
       <table mat-table [dataSource]="datasource()">
@@ -69,24 +70,16 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <!-- <button mat-menu-item disabled>
-                <mat-icon>voicemail</mat-icon>
-                <span>Check voice mail</span>
+              <button mat-menu-item (click)="addTreatment(element)">
+                <mat-icon>medical_services</mat-icon>
+                <span>Tratamiento</span>
               </button>
-              <button mat-menu-item>
-                <mat-icon>notifications_off</mat-icon>
-                <span>Disable alerts</span>
-              </button> -->
             </mat-menu>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          class="hover:bg-lime-50"
-          *matRowDef="let row; columns: displayedColumns"
-        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell p-3" colspan="4">No se encontraron resultados</td>
         </tr>
