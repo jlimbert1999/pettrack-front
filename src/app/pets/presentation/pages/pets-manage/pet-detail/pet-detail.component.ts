@@ -18,19 +18,18 @@ import { PetsService } from '../../../services';
 import { Pet } from '../../../../domain';
 
 @Component({
-  selector: 'app-pet-detail',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTabsModule,
-    MatProgressBarModule,
-    ImageLoaderComponent,
-  ],
-  templateUrl: './pet-detail.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-pet-detail',
+    imports: [
+        CommonModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTabsModule,
+        MatProgressBarModule,
+        ImageLoaderComponent,
+    ],
+    templateUrl: './pet-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class PetDetailComponent implements OnInit {
   private location = inject(Location);

@@ -24,18 +24,17 @@ import { medicalCenter } from '../../../../infrastructure';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-medical-center-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-  ],
-  templateUrl: './medical-center-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-medical-center-dialog',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+    ],
+    templateUrl: './medical-center-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class MedicalCenterDialogComponent implements OnInit {
   private fb = inject(FormBuilder);

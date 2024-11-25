@@ -10,18 +10,17 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tests',
-  templateUrl: './tests.component.html',
-  styleUrl: './tests.component.scss',
-  standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    AsyncPipe,
-  ]
+    selector: 'app-tests',
+    templateUrl: './tests.component.html',
+    styleUrl: './tests.component.scss',
+    imports: [
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        AsyncPipe,
+    ]
 })
 export class TestsComponent {
   private breakpointObserver = inject(BreakpointObserver);

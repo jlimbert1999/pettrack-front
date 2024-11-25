@@ -18,19 +18,18 @@ import { PetsService } from '../../services';
 import { Pet } from '../../../domain';
 
 @Component({
-  selector: 'app-pets-manage',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatMenuModule,
-    MatIconModule,
-    MatTableModule,
-    MatPaginatorModule,
-    SearchInputComponent,
-  ],
-  templateUrl: './pets-manage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-pets-manage',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTableModule,
+        MatPaginatorModule,
+        SearchInputComponent,
+    ],
+    templateUrl: './pets-manage.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class PetsManageComponent implements OnInit {
   private petService = inject(PetsService);

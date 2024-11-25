@@ -16,17 +16,16 @@ import { medicalCenter, typeTreatment } from '../../../infrastructure';
 import { TypeTreatmentService } from '../../services';
 
 @Component({
-  selector: 'app-types-treatments-manage',
-  standalone: true,
-  imports: [
-    MatTableModule,
-    MatIconButton,
-    MatButtonModule,
-    MatIconModule,
-    MatPaginatorModule,
-  ],
-  templateUrl: './types-treatments-manage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-types-treatments-manage',
+    imports: [
+        MatTableModule,
+        MatIconButton,
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+    ],
+    templateUrl: './types-treatments-manage.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class TypesTreatmentsManageComponent {
   dialog = inject(MatDialog);

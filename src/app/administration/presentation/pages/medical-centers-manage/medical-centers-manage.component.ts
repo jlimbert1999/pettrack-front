@@ -19,19 +19,18 @@ import { medicalCenter } from '../../../infrastructure';
 import MedicalCenterDialogComponent from './medical-center-dialog/medical-center-dialog.component';
 
 @Component({
-  selector: 'app-medical-centers-manage',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatIconModule,
-    MatButtonModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatToolbarModule,
-  ],
-  templateUrl: './medical-centers-manage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-medical-centers-manage',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatIconModule,
+        MatButtonModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatToolbarModule,
+    ],
+    templateUrl: './medical-centers-manage.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class MedicalCentersManageComponent {
   dialog = inject(MatDialog);

@@ -49,33 +49,32 @@ interface petProps {
   image: string | null;
 }
 @Component({
-  selector: 'owner-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
-    MatStepperModule,
-    MatTooltipModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatInputModule,
-    MatIconModule,
-    MatStepperModule,
-    ImageUploaderComponent,
-    SimpleSelectSearchComponent,
-  ],
-  templateUrl: './owner-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: { showError: true },
-    },
-  ],
+    selector: 'owner-dialog',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatCheckboxModule,
+        MatStepperModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatInputModule,
+        MatIconModule,
+        MatStepperModule,
+        ImageUploaderComponent,
+        SimpleSelectSearchComponent,
+    ],
+    templateUrl: './owner-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        provideNativeDateAdapter(),
+        {
+            provide: STEPPER_GLOBAL_OPTIONS,
+            useValue: { showError: true },
+        },
+    ]
 })
 export class OwnerDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);

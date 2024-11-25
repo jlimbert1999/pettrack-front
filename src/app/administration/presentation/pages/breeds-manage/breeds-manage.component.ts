@@ -16,11 +16,10 @@ import { BreedDialogComponent } from './breed-dialog/breed-dialog.component';
 import { breed, medicalCenter, typeTreatment } from '../../../infrastructure';
 
 @Component({
-  selector: 'app-breeds-manage',
-  standalone: true,
-  imports: [MatTableModule, MatIconModule, MatPaginatorModule, MatButtonModule],
-  templateUrl: './breeds-manage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-breeds-manage',
+    imports: [MatTableModule, MatIconModule, MatPaginatorModule, MatButtonModule],
+    templateUrl: './breeds-manage.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export default class BreedsManageComponent {
   dialog = inject(MatDialog);

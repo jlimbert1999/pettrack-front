@@ -26,20 +26,19 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { user } from '../../../../infrastructure';
 
 @Component({
-  selector: 'app-user-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCheckboxModule,
-  ],
-  templateUrl: './user-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-user-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCheckboxModule,
+    ],
+    templateUrl: './user-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDialogComponent {
   private formBuilder = inject(FormBuilder);

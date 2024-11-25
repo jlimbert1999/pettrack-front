@@ -11,11 +11,10 @@ import { MatListModule } from '@angular/material/list';
 import { AuthService } from '../../../../auth/presentation/services/auth.service';
 
 @Component({
-  selector: 'profile',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatListModule, MatIconModule],
-  templateUrl: './profile.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'profile',
+    imports: [CommonModule, RouterModule, MatListModule, MatIconModule],
+    templateUrl: './profile.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent {
   private authService = inject(AuthService);

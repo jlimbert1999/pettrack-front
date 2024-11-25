@@ -20,18 +20,17 @@ import { medicalCenter } from '../../../../infrastructure';
 import { TypeTreatmentService } from '../../../services';
 
 @Component({
-  selector: 'app-type-treatment-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-  ],
-  templateUrl: './type-treatment-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-type-treatment-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule,
+    ],
+    templateUrl: './type-treatment-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TypeTreatmentDialogComponent {
   private fb = inject(FormBuilder);

@@ -14,22 +14,21 @@ import { ProfileComponent } from '../../components/profile/profile.component';
 import { AuthService } from '../../../../auth/presentation/services/auth.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
-  standalone: true,
-  imports: [
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    AsyncPipe,
-    RouterModule,
-    OverlayModule,
-    ProfileComponent,
-  ],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss',
+    imports: [
+        RouterModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        AsyncPipe,
+        RouterModule,
+        OverlayModule,
+        ProfileComponent,
+    ]
 })
 export default class HomeComponent {
   menu = inject(AuthService).menu();

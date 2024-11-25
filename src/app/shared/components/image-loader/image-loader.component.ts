@@ -11,10 +11,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileService } from '../../services/file.service';
 
 @Component({
-  selector: 'image-loader',
-  standalone: true,
-  imports: [MatProgressSpinnerModule],
-  template: `
+    selector: 'image-loader',
+    imports: [MatProgressSpinnerModule],
+    template: `
     @if(isLoading()){
     <mat-spinner />
     } @else {
@@ -25,7 +24,7 @@ import { FileService } from '../../services/file.service';
     />
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageLoaderComponent implements OnInit {
   private fileService = inject(FileService);

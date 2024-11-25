@@ -19,17 +19,16 @@ import { medicalCenter } from '../../../../infrastructure';
 import { BreedService, MedicalCenterService } from '../../../services';
 
 @Component({
-  selector: 'app-breed-dialog',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-  ],
-  template: `
+    selector: 'app-breed-dialog',
+    imports: [
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSelectModule,
+    ],
+    template: `
     <h2 mat-dialog-title>{{ data ? 'Edicion' : 'Creacion' }} Raza</h2>
     <mat-dialog-content>
       <form [formGroup]="formCenter" class="py-2">
@@ -59,7 +58,7 @@ import { BreedService, MedicalCenterService } from '../../../services';
       </button>
     </mat-dialog-actions>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreedDialogComponent {
   private fb = inject(FormBuilder);
