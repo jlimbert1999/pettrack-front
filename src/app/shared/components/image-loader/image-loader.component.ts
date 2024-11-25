@@ -46,6 +46,7 @@ export class ImageLoaderComponent implements OnInit {
 
   private _getImage() {
     if (!this.url()) return;
+    this.isLoading.set(true);
     this.fileService.getFile(this.url()!).subscribe({
       next: (value) => this.previewUrl.set(URL.createObjectURL(value)),
       error: () => this.previewUrl.set('images/no-image.jpg'),
