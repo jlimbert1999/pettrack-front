@@ -32,11 +32,16 @@ export class OwnersService {
     return this.http
       .get<{ owners: owner[]; length: number }>(this.url, { params })
       .pipe(
-        tap((resp) => console.log(resp)),
         map(({ owners, length }) => ({
           owners: owners.map((el) => OwnerMapper.fromResponse(el)),
           length,
         }))
       );
+  }
+
+  getDistricts() {
+    return this.http.get<{ id: number; name: string }[]>(
+      `${this.url}/districts`
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { petHistory } from '../../../infrastructure';
+import { PdfService } from '../../../../shared';
 
 @Component({
   selector: 'pet-history',
@@ -53,10 +54,7 @@ import { petHistory } from '../../../infrastructure';
             <p>Centro de salud: {{ pulication.medicalCenter.name }}</p>
           </mat-card-content>
           <mat-card-actions align="end">
-            <button
-              mat-icon-button
-              aria-label="Example icon button with a vertical three dot icon"
-            >
+            <button mat-icon-button aria-label="Print sheet" (click)="test()">
               <mat-icon>print</mat-icon>
             </button>
           </mat-card-actions>
@@ -71,11 +69,16 @@ import { petHistory } from '../../../infrastructure';
 export class PetHistoryComponent {
   history = input.required<petHistory[]>();
   containerRef = input.required<HTMLDivElement>();
+  private pdfService = inject(PdfService);
 
   onScroll = output<void>();
 
   scrolled(): void {
     console.log('cargando');
     this.onScroll.emit();
+  }
+
+  test() {
+    this.pdfService.generateTreatmentSheet();
   }
 }

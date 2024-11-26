@@ -22,16 +22,13 @@
           </div>
           <div class="w-full sm:w-3/5">
             <div class="px-2 sm:px-0">
-              <h3 class="text-base/7 text-xl font-semibold text-gray-900">
+              <p class="text-base/7 text-4xl font-semibold text-gray-900">
                 {{ pet()?.name }}
-              </h3>
-              <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">
-                Descripcion de la mascota
               </p>
             </div>
             <div class="mt-6 border-t border-gray-100">
               <dl class="divide-y divide-gray-100">
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">Codigo</dt>
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
@@ -39,7 +36,7 @@
                     {{ pet()?.code }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">Raza</dt>
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
@@ -47,7 +44,7 @@
                     {{ pet()?.breed?.species }} - {{ pet()?.breed?.name }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">Color</dt>
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
@@ -55,7 +52,7 @@
                     {{ pet()?.color }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">Años</dt>
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
@@ -63,7 +60,7 @@
                     {{ pet()?.calculateAge() }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Macho/Hembra
                   </dt>
@@ -73,7 +70,7 @@
                     {{ pet()?.sex }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Esterilizado
                   </dt>
@@ -83,7 +80,7 @@
                     {{ pet()?.is_neutered ? "SI" : "NO" }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Fecha esterilizacion
                   </dt>
@@ -93,7 +90,7 @@
                     {{ (pet()?.neuter_date | date : "short") ?? "-----" }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Fecha registro
                   </dt>
@@ -103,7 +100,7 @@
                     {{ pet()?.createdAt | date : "short" }}
                   </dd>
                 </div>
-                <div class="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt class="text-sm/6 font-medium text-gray-900">
                     Propietario
                   </dt>
@@ -125,7 +122,7 @@
         <mat-chip-listbox>
           <mat-chip-option [selected]="0" [value]="null">Todos</mat-chip-option>
           @for (category of categories(); track $index) {
-          <mat-chip-option>{{ category }}</mat-chip-option>
+          <mat-chip-option>{{ category | titlecase }}</mat-chip-option>
           }
         </mat-chip-listbox>
       </div>

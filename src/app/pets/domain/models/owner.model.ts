@@ -8,6 +8,8 @@ interface ownerProps {
   phone: string;
   createdAt: Date;
   pets: pet[];
+  district: district;
+  birthDate: Date;
 }
 interface pet {
   id: string;
@@ -31,6 +33,11 @@ interface breed {
   species: string;
 }
 
+interface district {
+  id: number;
+  name: string;
+}
+
 export class Owner implements ownerProps {
   id: string;
   first_name: string;
@@ -41,6 +48,9 @@ export class Owner implements ownerProps {
   phone: string;
   createdAt: Date;
   pets: pet[];
+  district: district;
+  birthDate: Date;
+
   constructor({
     id,
     first_name,
@@ -51,6 +61,8 @@ export class Owner implements ownerProps {
     phone,
     createdAt,
     pets,
+    district,
+    birthDate,
   }: ownerProps) {
     this.id = id;
     this.first_name = first_name;
@@ -61,6 +73,8 @@ export class Owner implements ownerProps {
     this.phone = phone;
     this.createdAt = createdAt;
     this.pets = pets;
+    this.district = district;
+    this.birthDate = birthDate;
   }
 
   get fullname() {

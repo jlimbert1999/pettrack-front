@@ -31,7 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
-import { forkJoin, map, of, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 import {
   FileService,
@@ -49,32 +49,32 @@ interface petProps {
   image: string | null;
 }
 @Component({
-    selector: 'owner-dialog',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatDatepickerModule,
-        MatCheckboxModule,
-        MatStepperModule,
-        MatTooltipModule,
-        MatSelectModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatInputModule,
-        MatIconModule,
-        MatStepperModule,
-        ImageUploaderComponent,
-        SimpleSelectSearchComponent,
-    ],
-    templateUrl: './owner-dialog.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        provideNativeDateAdapter(),
-        {
-            provide: STEPPER_GLOBAL_OPTIONS,
-            useValue: { showError: true },
-        },
-    ]
+  selector: 'owner-dialog',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatCheckboxModule,
+    MatStepperModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatInputModule,
+    MatIconModule,
+    MatStepperModule,
+    ImageUploaderComponent,
+    SimpleSelectSearchComponent,
+  ],
+  templateUrl: './owner-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true },
+    },
+  ],
 })
 export class OwnerDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
@@ -83,18 +83,9 @@ export class OwnerDialogComponent implements OnInit {
   private petService = inject(PetsService);
   private dialogRef = inject(MatDialogRef<OwnerDialogComponent>);
 
-  breeds = toSignal<SimpleSelectOption<number>[]>(
-    this.petService.getBreeds().pipe(
-      map((resp) =>
-        resp.map((breed) => ({
-          value: breed.id,
-          text: `${breed.species} - ${breed.name}`,
-        }))
-      )
-    )
-  );
-
   readonly animalSex = ['macho', 'hembra'];
+  breeds = toSignal(this._getBreeds(), { initialValue: [] });
+  districts = toSignal(this._getDistricts(), { initialValue: [] });
 
   data?: Owner = inject(MAT_DIALOG_DATA);
 
@@ -106,6 +97,8 @@ export class OwnerDialogComponent implements OnInit {
         last_name: [''],
         phone: [''],
         dni: ['', Validators.required],
+        districtId: ['', Validators.required],
+        birthDate: ['', Validators.required],
         address: [''],
       }),
       this.formBuilder.array<FormGroup<any>[]>(
@@ -114,7 +107,6 @@ export class OwnerDialogComponent implements OnInit {
       ),
     ]),
   });
-
   petsList = signal<petProps[]>([]);
 
   ngOnInit(): void {
@@ -203,14 +195,36 @@ export class OwnerDialogComponent implements OnInit {
 
   private _loadForm(): void {
     if (!this.data) return;
-    const { pets, ...props } = this.data;
+    const { pets, district, ...props } = this.data;
     pets.forEach(({ id, image }, index) => {
       this.addPet();
       this.petsList()[index] = { id, image };
     });
-    this.ownerFormGroup.patchValue(props);
+    this.ownerFormGroup.patchValue({ ...props, districtId: district.id });
     this.petsFormArray.patchValue(
-      pets.map(({ breed, ...props }) => ({ ...props, breedId: breed.id }))
+      pets.map(({ breed, ...props }) => ({
+        ...props,
+        breedId: breed.id,
+      }))
+    );
+  }
+
+  private _getDistricts(): Observable<SimpleSelectOption<number>[]> {
+    return this.ownerService
+      .getDistricts()
+      .pipe(
+        map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
+      );
+  }
+
+  private _getBreeds(): Observable<SimpleSelectOption<number>[]> {
+    return this.petService.getBreeds().pipe(
+      map((resp) =>
+        resp.map((breed) => ({
+          value: breed.id,
+          text: `${breed.species} - ${breed.name}`,
+        }))
+      )
     );
   }
 }

@@ -8,6 +8,8 @@ export interface owner {
   phone: string;
   createdAt: string;
   pets: partialPet[];
+  district: district;
+  birthDate: string;
 }
 
 interface partialPet {
@@ -30,4 +32,9 @@ interface partialBreed {
   id: number;
   name: string;
   species: string;
+}
+
+interface district {
+  id: number;
+  name: string;
 }

@@ -20,17 +20,17 @@ import { medicalCenter } from '../../../../infrastructure';
 import { TypeTreatmentService } from '../../../services';
 
 @Component({
-    selector: 'app-type-treatment-dialog',
-    imports: [
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSelectModule,
-    ],
-    templateUrl: './type-treatment-dialog.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-type-treatment-dialog',
+  imports: [
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+  ],
+  templateUrl: './type-treatment-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypeTreatmentDialogComponent {
   private fb = inject(FormBuilder);
@@ -39,8 +39,8 @@ export class TypeTreatmentDialogComponent {
 
   data = inject<medicalCenter | undefined>(MAT_DIALOG_DATA);
   categories = [
-    { value: 'vaccination', label: 'Vacunacion' },
-    { value: 'deworming', label: 'Desparasitacion' },
+    { value: 'VACUNACION', label: 'Vacunacion' },
+    { value: 'DESPARASITACION', label: 'Desparasitacion' },
   ];
 
   formCenter: FormGroup = this.fb.group({

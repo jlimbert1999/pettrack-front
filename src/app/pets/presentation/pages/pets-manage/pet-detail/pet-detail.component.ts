@@ -15,11 +15,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { forkJoin } from 'rxjs';
 
-import { Pet } from '../../../../domain';
-import { ImageLoaderComponent } from '../../../../../shared';
 import { PetsService, TreatmentService } from '../../../services';
+import { ImageLoaderComponent } from '../../../../../shared';
 import { PetHistoryComponent } from '../../../components';
 import { petHistory } from '../../../../infrastructure';
+import { Pet } from '../../../../domain';
 
 @Component({
   selector: 'app-pet-detail',
@@ -67,7 +67,6 @@ export default class PetDetailComponent implements OnInit {
         this.pet.set(detail);
         this.history.set(history);
         this.categories.set(categories);
-        console.log(categories);
       },
       complete: () => this.isLoading.set(false),
     });

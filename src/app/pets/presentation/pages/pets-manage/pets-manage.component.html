@@ -29,7 +29,7 @@
 
         <ng-container matColumnDef="species">
           <th mat-header-cell *matHeaderCellDef>Especie</th>
-          <td mat-cell *matCellDef="let element">{{ element.species }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.breed.species }} - {{element.breed.name}}</td>
         </ng-container>
 
         <ng-container matColumnDef="owner">

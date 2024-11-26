@@ -66,7 +66,7 @@ export default class OwnersManageComponent implements OnInit {
       width: '1200px',
       maxWidth: '1200px',
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result?: Owner) => {
       if (!result) return;
       this.datasource.update((values) => {
         if (values.length === this.limit()) {
@@ -75,6 +75,7 @@ export default class OwnersManageComponent implements OnInit {
         return [result, ...values];
       });
       this.datasize.update((value) => (value += 1));
+      // this.generatePetSheet(result);
     });
   }
 
@@ -115,7 +116,7 @@ export default class OwnersManageComponent implements OnInit {
     this.getData();
   }
 
-  async generatePetSheet() {
-    await this.pdfService.generatePetSheet();
+  async generatePetSheet(owner: Owner) {
+    await this.pdfService.generatePetSheet(owner);
   }
 }

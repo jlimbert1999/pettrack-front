@@ -44,6 +44,30 @@
               <input matInput formControlName="address" />
             </mat-form-field>
           </div>
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Nacimiento</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerBirth"
+                formControlName="birthDate"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="pickerBirth"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickerBirth></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div>
+            <simple-select-search
+              label="Distrito"
+              placeholder="Seleccione un distrito"
+              [value]="ownerFormGroup.get('districtId')?.value"
+              [elements]="districts()"
+              (onSelect)="ownerFormGroup.get('districtId')?.setValue($event)"
+            />
+          </div>
         </div>
         <div class="flex justify-end">
           <button mat-button matStepperNext type="button">Siguiente</button>
@@ -112,6 +136,8 @@
                     </div>
                     <div class="col-span-3">
                       <simple-select-search
+                        placeholder="Seleccione una raza"
+                        label="Raza"
                         [value]="petsFormArray.at(i).get('breedId')?.value"
                         [elements]="breeds()!"
                         (onSelect)="
@@ -172,9 +198,6 @@
             </div>
           </div>
         </div>
-        @if(petsFormArray.length===0){
-        <div class="py-6 px-4 font-medium">SIN REGISTROS</div>
-        }
         <div class="flex justify-end py-3">
           <button mat-button matStepperPrevious type="button">Atras</button>
         </div>
