@@ -1,24 +1,34 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-import { convertImageABase64 } from '../../../helpers';
-import { Owner } from '../../pets/domain';
+import { Owner, Pet } from '../../pets/domain';
+import { FileService } from './file.service';
 @Injectable({
   providedIn: 'root',
 })
 export class PdfService {
-  async generatePetSheet(owner: Owner) {
-    const backgroundImage = await convertImageABase64('/images/pet-banner.png');
+  private fileService = inject(FileService);
+
+  async generateOwnerSheet() {}
+
+  async generatePetSheet(owner: Owner, pets: Pet[]) {
+    const backgroundImage = await this._getFileAsBase64('/images/banner.jpg');
+    const headerImage = await this._getFileAsBase64('/images/institution.jpeg');
+    const sloganImage = await this._getFileAsBase64('/images/slogan.png');
+    const petImages = await Promise.all(
+      pets.map((pet) => (pet.image ? this._getFileAsBase64(pet.image) : null))
+    );
     const docDefinition: TDocumentDefinitions = {
       header: {
         margin: [20, 20, 20, 40],
         columns: [
           {
-            image: await convertImageABase64('/images/institution.jpeg'),
+            image: headerImage,
             width: 120,
           },
           {
@@ -26,15 +36,25 @@ export class PdfService {
             alignment: 'center',
             stack: [
               {
-                text: 'Centro de Zoonosis Municipal',
+                text: 'Secretaría Municipal de Salud',
                 bold: true,
                 fontSize: 18,
               },
-              { text: 'Hoja de registro' },
+              { text: 'Centro Municipal de Zoonosis', fontSize: 16 },
+              { text: 'Registro Unico de Mascotas Sacaba' },
             ],
           },
-          { text: new Date().toLocaleString(), fontSize: 11, width: 150 },
+          {
+            image: sloganImage,
+            width: 120,
+          },
         ],
+      },
+      footer: {
+        margin: [0, 0, 20, 0],
+        alignment: 'right',
+        fontSize: 10,
+        text: `Generado el ${new Date().toLocaleString()}`,
       },
 
       background: function (_, pageSize) {
@@ -42,14 +62,14 @@ export class PdfService {
           image: backgroundImage,
           alignment: 'center',
           opacity: 0.25,
-          width: 350,
+          width: 500,
           absolutePosition: { y: pageSize.height / 4 },
         };
       },
       pageSize: 'LETTER',
       pageMargins: [30, 100, 30, 30],
       content: [
-        ...owner.pets.map<Content[]>((pet, index) => [
+        ...pets.map<Content[]>((pet, index) => [
           { text: 'DATOS GENERALES DEL PROPIETARIO', bold: true },
           {
             marginBottom: 10,
@@ -66,6 +86,7 @@ export class PdfService {
                   body: [
                     [{ text: 'NOMBRE:', bold: true }, owner.fullname],
                     [{ text: 'DIRECCION:', bold: true }, owner.address],
+                    [{ text: 'DISTRITO:', bold: true }, owner.district.name],
                   ],
                 },
                 layout: 'noBorders',
@@ -92,45 +113,75 @@ export class PdfService {
           {
             columns: [
               {
-                width: '*',
-                table: {
-                  widths: [80, '*'],
-                  body: [
-                    [{ text: 'NOMBRE:', bold: true }, pet.name],
-                    [{ text: 'CODIGO:', bold: true }, pet.code],
-                    [{ text: 'COLOR:', bold: true }, pet.color],
-                    [{ text: 'ESPECIE:', bold: true }, pet.breed.species],
-                    [{ text: 'RAZA:', bold: true }, pet.breed.name],
-                  ],
-                },
-                layout: 'noBorders',
+                width: 220,
+                alignment: 'center',
+                stack: [
+                  {
+                    ...(petImages[index]
+                      ? { width: 200, height: 200, image: petImages[index] }
+                      : {
+                          width: 200,
+                          height: 200,
+                          canvas: [
+                            {
+                              type: 'rect',
+                              x: 0,
+                              y: 0,
+                              w: 200,
+                              h: 200,
+                              lineWidth: 1,
+                            },
+                          ],
+                        }),
+                  },
+                  {
+                    text: `CODIGO: ${pet.code}`,
+                    bold: true,
+                    alignment: 'center',
+                    marginTop: 5,
+                  },
+                ],
               },
+              { width: 10, text: '' },
               {
                 width: '*',
-                table: {
-                  body: [
-                    [
-                      { text: 'NACIMIENTO:', bold: true },
-                      pet.birthDate.toLocaleDateString(),
-                    ],
-                    [
-                      { text: 'ESTERILIZADO:', bold: true },
-                      pet.is_neutered ? 'SI' : 'NO',
-                    ],
-                    [
-                      { text: 'FECHA ESTERILIZACIÓN:', bold: true },
-                      pet.neuter_date?.toLocaleDateString() ??
-                        'Sin esterilizar',
-                    ],
-                    [{ text: 'MACHO / HEMBRA:', bold: true }, pet.sex],
-                  ],
-                },
-                layout: 'noBorders',
+                columns: [
+                  {
+                    width: '*',
+                    fontSize: 10,
+                    table: {
+                      widths: [120, '*'],
+                      body: [
+                        [{ text: 'NOMBRE:', bold: true }, pet.name],
+                        [{ text: 'COLOR:', bold: true }, pet.color],
+                        [{ text: 'ESPECIE:', bold: true }, pet.breed.species],
+                        [{ text: 'RAZA:', bold: true }, pet.breed.name],
+                        [
+                          { text: 'MACHO/HEMBRA:', bold: true },
+                          pet.sex.toUpperCase(),
+                        ],
+                        [
+                          { text: 'NACIMIENTO:', bold: true },
+                          pet.birthDate?.toLocaleDateString() ?? '----',
+                        ],
+                        [
+                          { text: 'ESTERILIZADO:', bold: true },
+                          pet.is_neutered ? 'SI' : 'NO',
+                        ],
+                        [
+                          { text: 'FECHA ESTERILIZACIÓN:', bold: true },
+                          pet.neuter_date?.toDateString() ?? '----',
+                        ],
+                        [{ text: 'DESCRIPCION:', bold: true }, pet.description],
+                      ],
+                    },
+                    layout: 'noBorders',
+                  },
+                ],
               },
             ],
           },
-          { text: 'DESCRIPCION:', bold: true, marginTop: 8 },
-          { text: pet.description },
+          // TODO ADD PET HISTORY TABLE
           {
             style: 'tableExample',
             margin: [70, 200, 80, 0],
@@ -140,7 +191,7 @@ export class PdfService {
               body: [
                 ['', ''],
                 [
-                  { text: owner.fullname, alignment: 'center' },
+                  { text: owner.fullname.toUpperCase(), alignment: 'center' },
                   {
                     text: 'Firma y sello de quien recibe',
                     alignment: 'center',
@@ -148,7 +199,7 @@ export class PdfService {
                 ],
               ],
             },
-            ...(index < owner.pets.length - 1 && { pageBreak: 'after' }),
+            ...(index < pets.length - 1 && { pageBreak: 'after' }),
           },
         ]),
       ],
@@ -158,8 +209,8 @@ export class PdfService {
 
   generateTreatmentSheet() {
     const def: TDocumentDefinitions = {
-      pageSize: 'A5', // Tamaño de página A5
-      pageMargins: [20, 30, 20, 30], // Margen de la página
+      pageSize: 'A5',
+      pageMargins: [20, 30, 20, 30],
       content: [
         {
           text: 'Carnet de Vacunación',
@@ -217,5 +268,15 @@ export class PdfService {
       },
     };
     pdfMake.createPdf(def).print();
+  }
+
+  private async _getFileAsBase64(url: string): Promise<string> {
+    const blob = await lastValueFrom(this.fileService.getFile(url));
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
   }
 }

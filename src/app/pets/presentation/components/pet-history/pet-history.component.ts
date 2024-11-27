@@ -6,8 +6,9 @@ import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { petHistory } from '../../../infrastructure';
+import { treatment } from '../../../infrastructure';
 import { PdfService } from '../../../../shared';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'pet-history',
@@ -67,9 +68,11 @@ import { PdfService } from '../../../../shared';
   `,
 })
 export class PetHistoryComponent {
-  history = input.required<petHistory[]>();
-  containerRef = input.required<HTMLDivElement>();
   private pdfService = inject(PdfService);
+  private dialogRef = inject(MatDialog);
+
+  history = input.required<treatment[]>();
+  containerRef = input.required<HTMLDivElement>();
 
   onScroll = output<void>();
 

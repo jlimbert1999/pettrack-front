@@ -3,6 +3,14 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
   <span class="ml-4">Detalle</span>
+  <span class="flex-1"></span>
+  <button
+    mat-icon-button
+    class="example-icon favorite-icon"
+    aria-label="Example icon-button with heart icon"
+  >
+    <mat-icon>favorite</mat-icon>
+  </button>
 </mat-toolbar>
 @if(isLoading()){
 <mat-progress-bar mode="query" />
@@ -22,7 +30,7 @@
           </div>
           <div class="w-full sm:w-3/5">
             <div class="px-2 sm:px-0">
-              <p class="text-base/7 text-4xl font-semibold text-gray-900">
+              <p class="text-base/7 text-3xl font-semibold text-gray-900">
                 {{ pet()?.name }}
               </p>
             </div>
@@ -107,7 +115,7 @@
                   <dd
                     class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0"
                   >
-                    {{ pet()?.fullnameOwner }}
+                    {{ pet()?.owner?.fullname }}
                   </dd>
                 </div>
               </dl>
@@ -118,16 +126,30 @@
       </div>
     </mat-tab>
     <mat-tab label="Historial">
-      <div class="p-4">
-        <mat-chip-listbox>
-          <mat-chip-option [selected]="0" [value]="null">Todos</mat-chip-option>
-          @for (category of categories(); track $index) {
-          <mat-chip-option>{{ category | titlecase }}</mat-chip-option>
-          }
-        </mat-chip-listbox>
+      <div
+        class="flex flex-col sm:flex-row items-center sm:justify-between p-4"
+      >
+        <div>
+          <mat-chip-listbox (change)="filterTreatments($event.value)">
+            <mat-chip-option [selected]="0" [value]="null"
+              >Todos</mat-chip-option
+            >
+            @for (category of categories(); track $index) {
+            <mat-chip-option [value]="category">{{
+              category | titlecase
+            }}</mat-chip-option>
+            }
+          </mat-chip-listbox>
+        </div>
+        <div class="w-full sm:w-[120px] mt-4 sm:mt-0">
+          <button class="w-full" mat-flat-button (click)="addTreatment()">
+            <mat-icon>add</mat-icon>
+            Agregar
+          </button>
+        </div>
       </div>
 
-      <div class="h-[72vh] overflow-y-scroll rounded-xl m-4" #containerRef>
+      <div class="h-[70vh] overflow-y-scroll rounded-xl m-4" #containerRef>
         <pet-history [history]="history()" [containerRef]="containerRef" />
       </div>
     </mat-tab>

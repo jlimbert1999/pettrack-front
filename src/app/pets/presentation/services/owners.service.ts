@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { owner, OwnerMapper } from '../../infrastructure';
+import { owner, OwnerMapper, PetMapper } from '../../infrastructure';
 
 @Injectable({
   providedIn: 'root',
@@ -14,15 +14,21 @@ export class OwnersService {
   constructor(private http: HttpClient) {}
 
   create(form: Object) {
-    return this.http
-      .post<owner>(this.url, form)
-      .pipe(map((resp) => OwnerMapper.fromResponse(resp)));
+    return this.http.post<owner>(this.url, form).pipe(
+      map((resp) => ({
+        owner: OwnerMapper.fromResponse(resp),
+        pets: resp.pets.map((pet) => PetMapper.fromResponse(pet)),
+      }))
+    );
   }
 
-  update(id: string, form: Object) {
-    return this.http
-      .patch<owner>(`${this.url}/${id}`, form)
-      .pipe(map((resp) => OwnerMapper.fromResponse(resp)));
+  update(ownerId: string, form: Object) {
+    return this.http.patch<owner>(`${this.url}/${ownerId}`, form).pipe(
+      map((resp) => ({
+        owner: OwnerMapper.fromResponse(resp),
+        pets: resp.pets.map((pet) => PetMapper.fromResponse(pet)),
+      }))
+    );
   }
 
   findAll(limit: number, offset: number, term?: string) {
@@ -33,7 +39,10 @@ export class OwnersService {
       .get<{ owners: owner[]; length: number }>(this.url, { params })
       .pipe(
         map(({ owners, length }) => ({
-          owners: owners.map((el) => OwnerMapper.fromResponse(el)),
+          data: owners.map((resp) => ({
+            owner: OwnerMapper.fromResponse(resp),
+            pets: resp.pets.map((pet) => PetMapper.fromResponse(pet)),
+          })),
           length,
         }))
       );

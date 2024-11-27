@@ -8,7 +8,6 @@ import {
   signal,
 } from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,13 +17,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { OwnerDialogComponent } from './owner-dialog/owner-dialog.component';
 import { OwnersService } from '../../services/owners.service';
 import { PdfService, SearchInputComponent } from '../../../../shared';
-import { Owner } from '../../../domain';
+import { Owner, Pet } from '../../../domain';
 
+interface datasource {
+  owner: Owner;
+  pets: Pet[];
+}
 @Component({
   selector: 'app-owners-manage',
   imports: [
     CommonModule,
-    MatToolbarModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -36,12 +38,12 @@ import { Owner } from '../../../domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OwnersManageComponent implements OnInit {
-  private petService = inject(OwnersService);
   private readonly dialog = inject(MatDialog);
+  private onwerService = inject(OwnersService);
   private pdfService = inject(PdfService);
 
-  datasource = signal<Owner[]>([]);
-  datasize = signal<number>(10);
+  datasource = signal<datasource[]>([]);
+  datasize = signal<number>(0);
 
   limit = signal<number>(10);
   index = signal<number>(0);
@@ -63,10 +65,10 @@ export default class OwnersManageComponent implements OnInit {
 
   create(): void {
     const dialogRef = this.dialog.open(OwnerDialogComponent, {
-      width: '1200px',
-      maxWidth: '1200px',
+      width: '1100px',
+      maxWidth: '1100px',
     });
-    dialogRef.afterClosed().subscribe((result?: Owner) => {
+    dialogRef.afterClosed().subscribe((result?: datasource) => {
       if (!result) return;
       this.datasource.update((values) => {
         if (values.length === this.limit()) {
@@ -75,20 +77,19 @@ export default class OwnersManageComponent implements OnInit {
         return [result, ...values];
       });
       this.datasize.update((value) => (value += 1));
-      // this.generatePetSheet(result);
     });
   }
 
-  update(owner: Owner) {
+  update(element: datasource) {
     const dialogRef = this.dialog.open(OwnerDialogComponent, {
       width: '1100px',
       maxWidth: '1100px',
-      data: owner,
+      data: element,
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: datasource) => {
       if (!result) return;
       this.datasource.update((values) => {
-        const index = values.findIndex((el) => el.id === owner.id);
+        const index = values.findIndex((el) => el.owner.id === result.owner.id);
         values[index] = result;
         return [...values];
       });
@@ -96,10 +97,10 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   getData(): void {
-    this.petService
+    this.onwerService
       .findAll(this.limit(), this.offset(), this.term())
-      .subscribe(({ owners, length }) => {
-        this.datasource.set(owners);
+      .subscribe(({ data, length }) => {
+        this.datasource.set(data);
         this.datasize.set(length);
       });
   }
@@ -116,7 +117,7 @@ export default class OwnersManageComponent implements OnInit {
     this.getData();
   }
 
-  async generatePetSheet(owner: Owner) {
-    await this.pdfService.generatePetSheet(owner);
+  async generatePetSheet(owner: datasource) {
+    await this.pdfService.generatePetSheet(owner.owner, owner.pets);
   }
 }

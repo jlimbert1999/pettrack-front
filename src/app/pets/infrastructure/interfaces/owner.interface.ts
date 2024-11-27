@@ -7,12 +7,17 @@ export interface owner {
   address: string;
   phone: string;
   createdAt: string;
-  pets: partialPet[];
+  pets: pet[];
   district: district;
   birthDate: string;
 }
 
-interface partialPet {
+interface district {
+  id: number;
+  name: string;
+}
+
+export interface pet {
   id: string;
   name: string;
   code: number;
@@ -23,18 +28,14 @@ interface partialPet {
   createdAt: string;
   description: string;
   is_neutered: boolean;
-  neuter_date: Date | null;
-  breed: partialBreed;
-  birthDate: string;
+  neuter_date: string | null;
+  owner?: owner;
+  breed: breed;
+  birthDate: string | null;
 }
 
-interface partialBreed {
+interface breed {
   id: number;
   name: string;
   species: string;
-}
-
-interface district {
-  id: number;
-  name: string;
 }

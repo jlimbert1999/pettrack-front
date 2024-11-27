@@ -1,47 +1,27 @@
 <h2 mat-dialog-title>Registrar Tratamiento</h2>
-<mat-dialog-content class="py-2">
-  <div class="mb-6">
-    <dl class="divide-y divide-gray-100">
-      <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm/6 font-medium text-gray-900">Propiertario:</dt>
-        <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-          {{ data.fullnameOwner }}
-        </dd>
-      </div>
-      <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm/6 font-medium text-gray-900">Nombre:</dt>
-        <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-          {{ data.name }}
-        </dd>
-      </div>
-      <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm/6 font-medium text-gray-900">Codigo:</dt>
-        <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-          {{ data.code }}
-        </dd>
-      </div>
-    </dl>
+<mat-dialog-content>
+  <div class="py-2">
+    <simple-select-search
+      [elements]="centers()"
+      label="Centro de salud"
+      placeholder="Seleccione el centro de salud"
+      (onSelect)="formTreatment.get('medicalCenterId')?.setValue($event)"
+    />
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select (selectionChange)="getTypes($event.value)">
+        @for (category of categories(); track $index) {
+        <mat-option [value]="category.value">{{ category.text }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <simple-select-search
+      [elements]="types()"
+      label="Tipo"
+      placeholder="Seleccione el tipo de tratamiento"
+      (onSelect)="formTreatment.get('typeTreamentId')?.setValue($event)"
+    />
   </div>
-  <simple-select-search
-    [elements]="centers()"
-    label="Centro de salud"
-    placeholder="Seleccione el centro de salud"
-    (onSelect)="formTreatment.get('medicalCenterId')?.setValue($event)"
-  />
-  <mat-form-field appearance="outline">
-    <mat-label>Categoria</mat-label>
-    <mat-select (selectionChange)="getTypes($event.value)">
-      @for (category of categories(); track $index) {
-      <mat-option [value]="category.value">{{ category.text }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <simple-select-search
-    [elements]="types()"
-    label="Tipo"
-    placeholder="Seleccione el tipo de tratamiento"
-    (onSelect)="formTreatment.get('typeTreamentId')?.setValue($event)"
-  />
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="primary">Cancelar</button>

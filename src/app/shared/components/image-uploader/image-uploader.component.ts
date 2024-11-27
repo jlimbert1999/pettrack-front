@@ -16,9 +16,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FileService } from '../../services/file.service';
 
 @Component({
-    selector: 'image-uploader',
-    imports: [MatIconModule, MatButtonModule, MatTooltipModule],
-    template: `
+  selector: 'image-uploader',
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule],
+  template: `
     <div class="flex flex-col">
       @if(url()){
       <figure class="flex justify-center items-center rounded-2xl px-4">
@@ -47,6 +47,7 @@ import { FileService } from '../../services/file.service';
             [multiple]="true"
             accept="image/png, image/jpeg, image/jpg"
             (change)="select($event)"
+            capture="environment"
           />
           @if(url()){
           <button
@@ -62,7 +63,7 @@ import { FileService } from '../../services/file.service';
       </div>
     </div>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploaderComponent implements OnInit {
   private postService = inject(FileService);

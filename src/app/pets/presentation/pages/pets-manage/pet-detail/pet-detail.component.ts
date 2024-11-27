@@ -13,12 +13,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
+import { PetTreatmentDialogComponent } from '../pet-treatment-dialog/pet-treatment-dialog.component';
 import { PetsService, TreatmentService } from '../../../services';
 import { ImageLoaderComponent } from '../../../../../shared';
 import { PetHistoryComponent } from '../../../components';
-import { petHistory } from '../../../../infrastructure';
+import { treatment } from '../../../../infrastructure';
 import { Pet } from '../../../../domain';
 
 @Component({
@@ -39,12 +41,15 @@ import { Pet } from '../../../../domain';
 })
 export default class PetDetailComponent implements OnInit {
   private location = inject(Location);
+  private dialogRef = inject(MatDialog);
+
   private petService = inject(PetsService);
   private treatmentService = inject(TreatmentService);
 
   @Input('id') petId: string;
+
   pet = signal<Pet | null>(null);
-  history = signal<petHistory[]>([]);
+  history = signal<treatment[]>([]);
   categories = signal<string[]>([]);
   isLoading = signal(false);
 
@@ -54,6 +59,26 @@ export default class PetDetailComponent implements OnInit {
 
   back() {
     this.location.back();
+  }
+
+  addTreatment() {
+    const dialogRef = this.dialogRef.open(PetTreatmentDialogComponent, {
+      width: '600px',
+      maxWidth: '600px',
+      data: this.pet(),
+    });
+    dialogRef.afterClosed().subscribe((result?: treatment) => {
+      if (!result) return;
+      this.history.update((values) => [result, ...values]);
+    });
+  }
+
+  filterTreatments(category: string) {
+    return this.treatmentService
+      .getPetTreatments(this.petId, category)
+      .subscribe((resp) => {
+        this.history.set(resp);
+      });
   }
 
   private _getPetDetails() {

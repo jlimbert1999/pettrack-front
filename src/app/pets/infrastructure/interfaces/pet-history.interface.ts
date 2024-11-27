@@ -3,7 +3,7 @@ import {
   typeTreatment,
 } from '../../../administration/infrastructure';
 
-export interface petHistory {
+export interface treatment {
   id: number;
   date: string;
   typeTreatment: typeTreatment;

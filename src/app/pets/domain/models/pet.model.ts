@@ -1,8 +1,9 @@
+import type { Owner } from './owner.model';
+
 interface petProps {
-  id: string;
+  readonly id: string;
   name: string;
   code: number;
-  species: string;
   image: null | string;
   breed: breed;
   color: string;
@@ -10,33 +11,21 @@ interface petProps {
   createdAt: Date;
   description: string;
   is_neutered: boolean;
-  neuter_date: null;
-  owner: onwer;
-  birthDate: Date;
-}
-
-interface onwer {
-  id: string;
-  first_name: string;
-  middle_name: string;
-  last_name: string | null;
-  dni: string;
-  address: string;
-  phone: string;
-  createdAt: Date;
+  neuter_date: Date | null;
+  birthDate: Date | null;
+  owner?: Owner;
 }
 
 interface breed {
-  name: string;
-  species: string;
+  readonly id: number;
+  readonly name: string;
+  readonly species: string;
 }
 
-export class Pet implements petProps {
+export class Pet {
   id: string;
   name: string;
   code: number;
-  age: number;
-  species: string;
   image: null | string;
   breed: breed;
   color: string;
@@ -44,15 +33,14 @@ export class Pet implements petProps {
   createdAt: Date;
   description: string;
   is_neutered: boolean;
-  neuter_date: null;
-  owner: onwer;
-  birthDate: Date;
+  neuter_date: Date | null;
+  birthDate: Date | null;
+  owner?: Owner;
 
   constructor({
     id,
     name,
     code,
-    species,
     image,
     breed,
     color,
@@ -62,11 +50,11 @@ export class Pet implements petProps {
     is_neutered,
     neuter_date,
     owner,
+    birthDate,
   }: petProps) {
     this.id = id;
     this.name = name;
     this.code = code;
-    this.species = species;
     this.image = image;
     this.breed = breed;
     this.color = color;
@@ -76,10 +64,7 @@ export class Pet implements petProps {
     this.is_neutered = is_neutered;
     this.neuter_date = neuter_date;
     this.owner = owner;
-  }
-
-  get fullnameOwner() {
-    return `${this.owner.first_name} ${this.owner.middle_name} ${this.owner.last_name}`;
+    this.birthDate = birthDate;
   }
 
   calculateAge(): string {

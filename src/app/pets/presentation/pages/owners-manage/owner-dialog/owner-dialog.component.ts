@@ -41,7 +41,7 @@ import {
 } from '../../../../../shared';
 import { CustomFormValidators } from '../../../../../../helpers';
 import { OwnersService, PetsService } from '../../../services/';
-import { Owner } from '../../../../domain';
+import { Owner, Pet } from '../../../../domain';
 
 interface petProps {
   id?: string;
@@ -87,7 +87,7 @@ export class OwnerDialogComponent implements OnInit {
   breeds = toSignal(this._getBreeds(), { initialValue: [] });
   districts = toSignal(this._getDistricts(), { initialValue: [] });
 
-  data?: Owner = inject(MAT_DIALOG_DATA);
+  data?: { owner: Owner; pets: Pet[] } = inject(MAT_DIALOG_DATA);
 
   form = this.formBuilder.group({
     steps: this.formBuilder.array([
@@ -126,7 +126,7 @@ export class OwnerDialogComponent implements OnInit {
           })),
         };
         return this.data
-          ? this.ownerService.update(this.data.id, newForm)
+          ? this.ownerService.update(this.data.owner.id, newForm)
           : this.ownerService.create(newForm);
       })
     );
@@ -195,12 +195,12 @@ export class OwnerDialogComponent implements OnInit {
 
   private _loadForm(): void {
     if (!this.data) return;
-    const { pets, district, ...props } = this.data;
+    const { pets, owner } = this.data;
     pets.forEach(({ id, image }, index) => {
       this.addPet();
       this.petsList()[index] = { id, image };
     });
-    this.ownerFormGroup.patchValue({ ...props, districtId: district.id });
+    this.ownerFormGroup.patchValue({ ...owner, districtId: owner.district.id });
     this.petsFormArray.patchValue(
       pets.map(({ breed, ...props }) => ({
         ...props,

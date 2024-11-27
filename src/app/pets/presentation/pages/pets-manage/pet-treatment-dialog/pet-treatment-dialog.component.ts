@@ -46,7 +46,7 @@ export class PetTreatmentDialogComponent {
   save() {
     this.treatmentService
       .create(this.formTreatment.value, this.data.id)
-      .subscribe(() => this.dialogRef.close());
+      .subscribe((resp) => this.dialogRef.close(resp));
   }
 
   close() {

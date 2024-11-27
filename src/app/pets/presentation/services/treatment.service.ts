@@ -1,12 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { map } from 'rxjs';
+
 import { environment } from '../../../../environments/environment';
 import {
   medicalCenter,
   typeTreatment,
 } from '../../../administration/infrastructure';
-import { map } from 'rxjs';
-import { petHistory } from '../../infrastructure';
+import { treatment } from '../../infrastructure';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +26,11 @@ export class TreatmentService {
       .pipe(map((resp) => resp.map((el) => el.category)));
   }
 
-  getPetTreatments(petId: string) {
-    return this.http.get<petHistory[]>(`${this.url}/pet/${petId}`);
+  getPetTreatments(petId: string, category?: string) {
+    const params = new HttpParams({
+      fromObject: { ...(category && { category }) },
+    });
+    return this.http.get<treatment[]>(`${this.url}/pet/${petId}`, { params });
   }
 
   getTypeTreatments(category?: string) {
@@ -37,6 +41,6 @@ export class TreatmentService {
   }
 
   create(form: Object, petId: string) {
-    return this.http.post(this.url, { ...form, petId });
+    return this.http.post<treatment>(this.url, { ...form, petId });
   }
 }

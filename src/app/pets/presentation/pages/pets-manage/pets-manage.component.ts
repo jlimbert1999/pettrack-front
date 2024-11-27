@@ -13,12 +13,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 
 import { SearchInputComponent } from '../../../../shared';
 import { PetsService } from '../../services';
 import { Pet } from '../../../domain';
-import { PetTreatmentDialogComponent } from './pet-treatment-dialog/pet-treatment-dialog.component';
 
 @Component({
   selector: 'app-pets-manage',
@@ -36,7 +34,6 @@ import { PetTreatmentDialogComponent } from './pet-treatment-dialog/pet-treatmen
 })
 export default class PetsManageComponent implements OnInit {
   private petService = inject(PetsService);
-  private dialogRef = inject(MatDialog);
 
   datasource = signal<Pet[]>([]);
   datasize = signal<number>(10);
@@ -47,12 +44,11 @@ export default class PetsManageComponent implements OnInit {
   term = signal<string>('');
 
   readonly displayedColumns = [
-    'owner',
-    'code',
     'name',
+    'code',
     'species',
     'date',
-    'detail',
+    'owner',
     'options',
   ];
 
@@ -79,13 +75,5 @@ export default class PetsManageComponent implements OnInit {
     this.limit.set(pageSize);
     this.index.set(pageIndex);
     this.getData();
-  }
-
-  addTreatment(pet: Pet) {
-    this.dialogRef.open(PetTreatmentDialogComponent, {
-      width: '800px',
-      maxWidth: '800px',
-      data: pet,
-    });
   }
 }

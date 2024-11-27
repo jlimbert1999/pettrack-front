@@ -1,5 +1,5 @@
 interface ownerProps {
-  id: string;
+  readonly id: string;
   first_name: string;
   middle_name: string;
   last_name: string | null;
@@ -7,38 +7,15 @@ interface ownerProps {
   address: string;
   phone: string;
   createdAt: Date;
-  pets: pet[];
   district: district;
   birthDate: Date;
 }
-interface pet {
-  id: string;
-  name: string;
-  code: number;
-  species: string;
-  image: null | string;
-  color: string;
-  sex: string;
-  createdAt: Date;
-  birthDate: Date;
-  description: string;
-  is_neutered: boolean;
-  neuter_date: Date | null;
-  breed: breed;
-}
-
-interface breed {
-  id: number;
-  name: string;
-  species: string;
-}
-
 interface district {
-  id: number;
-  name: string;
+  readonly id: number;
+  readonly name: string;
 }
 
-export class Owner implements ownerProps {
+export class Owner {
   id: string;
   first_name: string;
   middle_name: string;
@@ -47,7 +24,6 @@ export class Owner implements ownerProps {
   address: string;
   phone: string;
   createdAt: Date;
-  pets: pet[];
   district: district;
   birthDate: Date;
 
@@ -60,7 +36,6 @@ export class Owner implements ownerProps {
     address,
     phone,
     createdAt,
-    pets,
     district,
     birthDate,
   }: ownerProps) {
@@ -72,7 +47,6 @@ export class Owner implements ownerProps {
     this.address = address;
     this.phone = phone;
     this.createdAt = createdAt;
-    this.pets = pets;
     this.district = district;
     this.birthDate = birthDate;
   }

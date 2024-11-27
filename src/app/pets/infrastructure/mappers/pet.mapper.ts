@@ -1,12 +1,20 @@
 import { Pet } from '../../domain/models/pet.model';
-import { pet } from '../interfaces/pet.interface';
+import { OwnerMapper, pet } from '..';
 
 export class PetMapper {
-  static fromResponse({ createdAt, birthDate, ...props }: pet): Pet {
+  static fromResponse({
+    createdAt,
+    birthDate,
+    neuter_date,
+    owner,
+    ...props
+  }: pet): Pet {
     return new Pet({
       ...props,
+      owner: owner ? OwnerMapper.fromResponse(owner) : undefined,
       createdAt: new Date(createdAt),
-      birthDate: new Date(birthDate),
+      birthDate: birthDate ? new Date(birthDate) : null,
+      neuter_date: neuter_date ? new Date(neuter_date) : null,
     });
   }
 }

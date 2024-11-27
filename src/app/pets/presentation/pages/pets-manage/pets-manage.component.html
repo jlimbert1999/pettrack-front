@@ -15,6 +15,11 @@
   <div class="p-3">
     <div class="mat-elevation-z2">
       <table mat-table [dataSource]="datasource()">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="code">
           <th mat-header-cell *matHeaderCellDef>Codigo</th>
           <td mat-cell *matCellDef="let element">
@@ -22,20 +27,10 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-        </ng-container>
-
         <ng-container matColumnDef="species">
           <th mat-header-cell *matHeaderCellDef>Especie</th>
-          <td mat-cell *matCellDef="let element">{{ element.breed.species }} - {{element.breed.name}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="owner">
-          <th mat-header-cell *matHeaderCellDef>Propietario</th>
           <td mat-cell *matCellDef="let element">
-            {{ element.fullnameOwner | titlecase }}
+            {{ element.breed.species }} - {{ element.breed.name }}
           </td>
         </ng-container>
 
@@ -46,7 +41,14 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="detail">
+        <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef>Propietario</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.owner.fullname | titlecase }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element" class="w-8">
             <button
@@ -56,25 +58,6 @@
             >
               <mat-icon>chevron_right</mat-icon>
             </button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="options">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element" class="w-8">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="menu"
-              aria-label="Menu options"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="addTreatment(element)">
-                <mat-icon>medical_services</mat-icon>
-                <span>Tratamiento</span>
-              </button>
-            </mat-menu>
           </td>
         </ng-container>
 
