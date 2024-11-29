@@ -54,11 +54,11 @@ import { MatDialog } from '@angular/material/dialog';
           <mat-card-content>
             <p>Centro de salud: {{ pulication.medicalCenter.name }}</p>
           </mat-card-content>
-          <mat-card-actions align="end">
+          <!-- <mat-card-actions align="end">
             <button mat-icon-button aria-label="Print sheet" (click)="test()">
               <mat-icon>print</mat-icon>
             </button>
-          </mat-card-actions>
+          </mat-card-actions> -->
         </mat-card>
         } @empty {
         <p class="font-medium">SIN REGISTROS</p>
@@ -77,7 +77,6 @@ export class PetHistoryComponent {
   onScroll = output<void>();
 
   scrolled(): void {
-    console.log('cargando');
     this.onScroll.emit();
   }
 
