@@ -36,7 +36,7 @@ export const routes: Routes = [
         path: 'pets/:id',
         loadComponent: () =>
           import(
-            './pets/presentation/pages/pets-manage/pet-detail/pet-detail.component'
+            './pets/presentation/pages/pet-detail/pet-detail.component'
           ),
       },
       {

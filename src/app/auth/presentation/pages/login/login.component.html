@@ -1,54 +1,74 @@
-<div class="min-h-screen flex items-center justify-center w-full">
-  <div class="shadow-md border rounded-lg p-5 mx-2 sm:mx-0 w-full sm:w-[450px]  animate-fade-down animate-ease-in-out">
-    <div class="sm:mx-auto mb-6">
-      <img class="mx-auto h-16 mb-2" src="images/app-icon.png" alt="Icon app" />
-      <p class="text-center text-xl font-bold font-sans">
-        Sistema de Registro de Mascotas
-      </p>
-      <p class="text-center">Inicio de sesion</p>
-    </div>
+<div class="h-screen flex flex-col w-screen">
+  <div class="flex-1 flex flex-col items-center justify-center px-2 sm:px-0">
+    <div
+      class="shadow-md border rounded-lg p-5 mx-2 sm:mx-0 w-full sm:w-[450px] animate-fade-down animate-ease-in-out"
+    >
+      <div class="sm:mx-auto mb-6">
+        <img
+          class="mx-auto h-16 mb-2"
+          src="images/app-icon.png"
+          alt="Icon app"
+        />
+        <p class="text-center text-xl font-bold font-sans">
+          Sistema de Registro de Mascotas
+        </p>
+        <p class="text-center">Inicio de sesion</p>
+      </div>
 
-    <form [formGroup]="loginForm" (submit)="login()" autocomplete="off">
-      <div class="mb-2">
-        <mat-form-field appearance="outline">
-          <mat-label>Usuario</mat-label>
-          <input
-            matInput
-            placeholder="Ingrese su usuario"
-            formControlName="login"
-          />
-        </mat-form-field>
+      <form [formGroup]="loginForm" (submit)="login()" autocomplete="off">
+        <div class="mb-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Usuario</mat-label>
+            <input
+              matInput
+              placeholder="Ingrese su usuario"
+              formControlName="login"
+            />
+          </mat-form-field>
+        </div>
+        <div class="mb-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input
+              [autocomplete]="false"
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Ingrese su contraseña"
+              formControlName="password"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword"
+            >
+              <mat-icon>{{
+                hidePassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div class="mb-4">
+          <mat-checkbox formControlName="remember">
+            Recordar nombre usuario
+          </mat-checkbox>
+        </div>
+        <button type="submit" mat-flat-button class="w-full">Ingresar</button>
+      </form>
+    </div>
+  </div>
+  <div class="mx-auto w-full px-2 sm:px-6 py-3">
+    <div class="flex items-center gap-x-4">
+      <div>
+        <img src="images/gams.png" class="w-8" alt="Institution icon" />
       </div>
-      <div class="mb-2">
-        <mat-form-field appearance="outline">
-          <mat-label>Contraseña</mat-label>
-          <input
-            [autocomplete]="false"
-            matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            placeholder="Ingrese su contraseña"
-            formControlName="password"
-          />
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            (click)="hidePassword = !hidePassword"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hidePassword"
-          >
-            <mat-icon>{{
-              hidePassword ? "visibility_off" : "visibility"
-            }}</mat-icon>
-          </button>
-        </mat-form-field>
+      <div>
+        <p class="text-sm/6 text-gray-600 max-md:text-center">
+          2024 - Gobierno Autonomo Municipal de Sacaba
+        </p>
       </div>
-      <div class="mb-4">
-        <mat-checkbox formControlName="remember">
-          Recordar nombre usuario
-        </mat-checkbox>
-      </div>
-      <button type="submit" mat-flat-button class="w-full">Ingresar</button>
-    </form>
+    </div>
   </div>
 </div>

@@ -9,31 +9,52 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { OverlayModule } from '@angular/cdk/overlay';
 
-import { SearchInputComponent } from '../../../../shared';
-import { PetsService } from '../../services';
+import {
+  SearchInputComponent,
+  SimpleSelectOption,
+  SimpleSelectSearchComponent,
+} from '../../../../shared';
+import { OwnersService, PetsService } from '../../services';
 import { Pet } from '../../../domain';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-pets-manage',
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule,
     MatMenuModule,
+    OverlayModule,
     MatIconModule,
+    MatInputModule,
     MatTableModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatFormFieldModule,
     MatPaginatorModule,
     SearchInputComponent,
+    SimpleSelectSearchComponent,
   ],
   templateUrl: './pets-manage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PetsManageComponent implements OnInit {
   private petService = inject(PetsService);
+  private ownerService = inject(OwnersService);
+  private formBuilder = inject(FormBuilder);
 
   datasource = signal<Pet[]>([]);
   datasize = signal<number>(10);
@@ -42,13 +63,20 @@ export default class PetsManageComponent implements OnInit {
   index = signal<number>(0);
   offset = computed<number>(() => this.limit() * this.index());
   term = signal<string>('');
+  isFilterOpen = false;
+  districts = toSignal(this._getDistricts(), { initialValue: [] });
+
+  formFilter = this.formBuilder.group({
+    owner: [''],
+    district: [''],
+  });
 
   readonly displayedColumns = [
-    'name',
     'code',
+    'name',
     'species',
-    'date',
     'owner',
+    'date',
     'options',
   ];
 
@@ -58,11 +86,28 @@ export default class PetsManageComponent implements OnInit {
 
   getData(): void {
     this.petService
-      .findAll(this.limit(), this.offset(), this.term())
+      .findAll({
+        limit: this.limit(),
+        offset: this.offset(),
+        term: this.term(),
+        formFilter: this.formFilter.value,
+      })
       .subscribe(({ pets, length }) => {
         this.datasource.set(pets);
         this.datasize.set(length);
       });
+  }
+
+  filter() {
+    this.index.set(0);
+    this.isFilterOpen = false;
+    this.getData();
+  }
+
+  reset() {
+    this.formFilter.reset();
+    this.isFilterOpen = false;
+    this.getData();
   }
 
   search(term: string) {
@@ -75,5 +120,13 @@ export default class PetsManageComponent implements OnInit {
     this.limit.set(pageSize);
     this.index.set(pageIndex);
     this.getData();
+  }
+
+  private _getDistricts(): Observable<SimpleSelectOption<number>[]> {
+    return this.ownerService
+      .getDistricts()
+      .pipe(
+        map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
+      );
   }
 }

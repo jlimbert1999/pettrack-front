@@ -42,9 +42,7 @@ export function loggingInterceptor(
 }
 
 function handleHttpErrors(error: HttpErrorResponse, service: AlertService) {
-  const message: string = error.error['message'] ?? 'Solicitud incorrecta';
-  service.showSnackbar();
-
+  const message: string = error.error['message'] ?? 'Ha ocurrido un error';
   switch (error.status) {
     case 500:
       // Alert.Alert({
@@ -54,7 +52,7 @@ function handleHttpErrors(error: HttpErrorResponse, service: AlertService) {
       // });
       break;
     case 400:
-      // service.showSnackbar();
+      service.showSnackbar({ message: message });
       break;
     case 403:
       // Alert.Alert({

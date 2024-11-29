@@ -6,6 +6,12 @@ import { environment } from '../../../../environments/environment';
 import { pet, PetMapper } from '../../infrastructure';
 import { breed } from '../../../administration/infrastructure';
 
+interface findProps {
+  limit: number;
+  offset: number;
+  term?: string;
+  formFilter: Object;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -14,9 +20,12 @@ export class PetsService {
 
   constructor(private http: HttpClient) {}
 
-  findAll(limit: number, offset: number, term?: string) {
+  findAll({ limit, offset, term, formFilter }: findProps) {
+    const filteredProps = Object.fromEntries(
+      Object.entries(formFilter).filter(([_, value]) => value)
+    );
     const params = new HttpParams({
-      fromObject: { limit, offset, ...(term && { term }) },
+      fromObject: { limit, offset, ...(term && { term }), ...filteredProps },
     });
     return this.http
       .get<{ pets: pet[]; length: number }>(this.url, { params })

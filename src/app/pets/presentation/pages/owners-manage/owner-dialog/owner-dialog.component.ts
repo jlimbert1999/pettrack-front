@@ -23,7 +23,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 import {

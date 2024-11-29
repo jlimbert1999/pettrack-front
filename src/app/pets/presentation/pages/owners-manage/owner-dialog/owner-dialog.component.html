@@ -7,7 +7,7 @@
         [stepControl]="ownerFormGroup"
         label="Datos propietario"
       >
-        <div class="grid grid-cols-4 gap-x-3 gap-y-1 py-2">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-x-3 gap-y-1 py-2">
           <div class="col-span-2">
             <mat-form-field appearance="outline">
               <mat-label>Nombre</mat-label>
@@ -40,7 +40,7 @@
           </div>
           <div class="col-span-2">
             <mat-form-field appearance="outline">
-              <mat-label>Dirrecion</mat-label>
+              <mat-label>Direcion</mat-label>
               <input matInput formControlName="address" />
             </mat-form-field>
           </div>
@@ -207,5 +207,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-button (click)="save()" [disabled]="form.invalid">Guardar</button>
+  <button mat-flat-button (click)="save()" [disabled]="form.invalid">Guardar</button>
 </mat-dialog-actions>

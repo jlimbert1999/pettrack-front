@@ -16,12 +16,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
-import { PetTreatmentDialogComponent } from '../pet-treatment-dialog/pet-treatment-dialog.component';
-import { PetsService, TreatmentService } from '../../../services';
-import { ImageLoaderComponent } from '../../../../../shared';
-import { PetHistoryComponent } from '../../../components';
-import { treatment } from '../../../../infrastructure';
-import { Pet } from '../../../../domain';
+import { ImageLoaderComponent } from '../../../../shared';
+import { Pet } from '../../../domain';
+import { treatment } from '../../../infrastructure';
+import { PetHistoryComponent } from '../../components';
+import { PetsService, TreatmentService } from '../../services';
+import { PetTreatmentDialogComponent } from '../pets-manage/pet-treatment-dialog/pet-treatment-dialog.component';
 
 @Component({
   selector: 'app-pet-detail',

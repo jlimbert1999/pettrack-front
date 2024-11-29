@@ -15,8 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 
 import { OwnerDialogComponent } from './owner-dialog/owner-dialog.component';
-import { OwnersService } from '../../services/owners.service';
 import { PdfService, SearchInputComponent } from '../../../../shared';
+import { OwnersService } from '../../services';
 import { Owner, Pet } from '../../../domain';
 
 interface datasource {
@@ -38,7 +38,7 @@ interface datasource {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OwnersManageComponent implements OnInit {
-  private readonly dialog = inject(MatDialog);
+  private dialogRef = inject(MatDialog);
   private onwerService = inject(OwnersService);
   private pdfService = inject(PdfService);
 
@@ -52,8 +52,9 @@ export default class OwnersManageComponent implements OnInit {
 
   readonly displayedColumns = [
     'name',
-    'dni',
     'address',
+    'district',
+    'dni',
     'phone',
     'pets',
     'options',
@@ -64,7 +65,7 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   create(): void {
-    const dialogRef = this.dialog.open(OwnerDialogComponent, {
+    const dialogRef = this.dialogRef.open(OwnerDialogComponent, {
       width: '1100px',
       maxWidth: '1100px',
     });
@@ -81,7 +82,7 @@ export default class OwnersManageComponent implements OnInit {
   }
 
   update(element: datasource) {
-    const dialogRef = this.dialog.open(OwnerDialogComponent, {
+    const dialogRef = this.dialogRef.open(OwnerDialogComponent, {
       width: '1100px',
       maxWidth: '1100px',
       data: element,
