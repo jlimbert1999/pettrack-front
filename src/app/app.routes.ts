@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import { isAuthenticatedGuard } from './layout/presentation/guards/is-authenticated.guard';
+import { isNotAuthenticatedGuard } from './layout/presentation/guards/is-not-authenticated.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
     title: 'Autentificacion',
-    // canActivate: [isNotAuthenticatedGuard],
+    canActivate: [isNotAuthenticatedGuard],
     loadComponent: () =>
       import('./auth/presentation/pages/login/login.component'),
   },
@@ -35,9 +36,7 @@ export const routes: Routes = [
         title: 'Mascotas',
         path: 'pets/:id',
         loadComponent: () =>
-          import(
-            './pets/presentation/pages/pet-detail/pet-detail.component'
-          ),
+          import('./pets/presentation/pages/pet-detail/pet-detail.component'),
       },
       {
         title: 'Usuarios',

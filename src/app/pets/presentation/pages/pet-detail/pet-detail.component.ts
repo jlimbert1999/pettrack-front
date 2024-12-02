@@ -57,6 +57,7 @@ export default class PetDetailComponent implements OnInit {
 
   back() {
     this.location.back();
+    this.petService.keepAlive.set(true);
   }
 
   filterTreatments(category: string) {

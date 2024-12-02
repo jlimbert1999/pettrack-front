@@ -30,6 +30,7 @@ interface cache {
 export class PetsService {
   private readonly url = `${environment.apiUrl}/pets`;
   cache = signal<cache | null>(null);
+  keepAlive = signal(false);
 
   constructor(private http: HttpClient) {}
 

@@ -91,7 +91,7 @@ export default class PetsManageComponent implements OnInit {
   }
 
   getData(): void {
-    if (this.petService.cache()) {
+    if (this.petService.cache() && this.petService.keepAlive()) {
       const { datasize, datasource, term, limit, index, formFilter } =
         this.petService.cache()!;
       this.datasize.set(datasize);
@@ -150,6 +150,7 @@ export default class PetsManageComponent implements OnInit {
   }
 
   private _saveCache() {
+    this.petService.keepAlive.set(false);
     this.petService.cache.set({
       datasize: this.datasize(),
       datasource: this.datasource(),
