@@ -13,11 +13,12 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Platform, PlatformModule } from '@angular/cdk/platform';
 import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'image-uploader',
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, PlatformModule],
   template: `
     <div class="flex flex-col">
       @if(url()){
@@ -32,6 +33,26 @@ import { FileService } from '../../services/file.service';
       <div class="flex items-center justify-center">
         <div class="text-lg mr-4">Imagen</div>
         <div class="flex gap-x-2">
+          @if(enablePhoto){
+          <button
+            mat-icon-button
+            aria-label="Select photo"
+            (click)="photoInput.click()"
+            matTooltip="Seleccionar foto"
+          >
+            <mat-icon>photo_camera</mat-icon>
+          </button>
+          <input
+            #photoInput
+            [hidden]="true"
+            type="file"
+            [multiple]="false"
+            accept="image/png, image/jpeg, image/jpg"
+            (change)="select($event)"
+            capture="camera"
+          />
+          }
+
           <button
             mat-icon-button
             aria-label="Select image"
@@ -44,10 +65,9 @@ import { FileService } from '../../services/file.service';
             #imageInput
             [hidden]="true"
             type="file"
-            [multiple]="true"
+            [multiple]="false"
             accept="image/png, image/jpeg, image/jpg"
             (change)="select($event)"
-            capture="environment"
           />
           @if(url()){
           <button
@@ -66,6 +86,7 @@ import { FileService } from '../../services/file.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploaderComponent implements OnInit {
+  platform = inject(Platform);
   private postService = inject(FileService);
   imageInput = viewChild.required<ElementRef<HTMLInputElement>>('imageInput');
 
@@ -74,6 +95,8 @@ export class ImageUploaderComponent implements OnInit {
 
   url = signal<string | null>(null);
   file = model<File | undefined>();
+
+  enablePhoto = this.platform.ANDROID || this.platform.IOS;
 
   ngOnInit(): void {
     if (!this.preview()) return;

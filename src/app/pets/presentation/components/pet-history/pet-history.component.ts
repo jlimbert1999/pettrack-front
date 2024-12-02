@@ -68,8 +68,6 @@ import { MatDialog } from '@angular/material/dialog';
   `,
 })
 export class PetHistoryComponent {
-  private pdfService = inject(PdfService);
-  private dialogRef = inject(MatDialog);
 
   history = input.required<treatment[]>();
   containerRef = input.required<HTMLDivElement>();
@@ -81,6 +79,5 @@ export class PetHistoryComponent {
   }
 
   test() {
-    this.pdfService.generateTreatmentSheet();
   }
 }

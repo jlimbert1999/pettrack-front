@@ -3,13 +3,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -20,6 +22,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { OverlayModule } from '@angular/cdk/overlay';
 
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, Observable, of } from 'rxjs';
+
 import {
   SearchInputComponent,
   SimpleSelectOption,
@@ -27,8 +32,6 @@ import {
 } from '../../../../shared';
 import { OwnersService, PetsService } from '../../services';
 import { Pet } from '../../../domain';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-pets-manage',
@@ -55,6 +58,9 @@ export default class PetsManageComponent implements OnInit {
   private petService = inject(PetsService);
   private ownerService = inject(OwnersService);
   private formBuilder = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef).onDestroy(() => {
+    this._saveCache();
+  });
 
   datasource = signal<Pet[]>([]);
   datasize = signal<number>(10);
@@ -66,9 +72,9 @@ export default class PetsManageComponent implements OnInit {
   isFilterOpen = false;
   districts = toSignal(this._getDistricts(), { initialValue: [] });
 
-  formFilter = this.formBuilder.group({
+  formFilter: FormGroup = this.formBuilder.group({
     owner: [''],
-    district: [''],
+    district: [null],
   });
 
   readonly displayedColumns = [
@@ -85,6 +91,16 @@ export default class PetsManageComponent implements OnInit {
   }
 
   getData(): void {
+    if (this.petService.cache()) {
+      const { datasize, datasource, term, limit, index, formFilter } =
+        this.petService.cache()!;
+      this.datasize.set(datasize);
+      this.datasource.set(datasource);
+      this.term.set(term);
+      this.limit.set(limit);
+      this.index.set(index);
+      this.formFilter.patchValue(formFilter);
+    }
     this.petService
       .findAll({
         limit: this.limit(),
@@ -123,10 +139,25 @@ export default class PetsManageComponent implements OnInit {
   }
 
   private _getDistricts(): Observable<SimpleSelectOption<number>[]> {
+    if (this.petService.cache()?.districts) {
+      return of(this.petService.cache()!.districts);
+    }
     return this.ownerService
       .getDistricts()
       .pipe(
         map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
       );
+  }
+
+  private _saveCache() {
+    this.petService.cache.set({
+      datasize: this.datasize(),
+      datasource: this.datasource(),
+      limit: this.limit(),
+      index: this.index(),
+      term: this.term(),
+      formFilter: this.formFilter.value,
+      districts: this.districts(),
+    });
   }
 }

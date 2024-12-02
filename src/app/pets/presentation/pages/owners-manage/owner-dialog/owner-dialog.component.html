@@ -7,8 +7,8 @@
         [stepControl]="ownerFormGroup"
         label="Datos propietario"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-x-3 gap-y-1 py-2">
-          <div class="col-span-2">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-x-3 gap-y-1 pt-2">
+          <div class="sm:col-span-2">
             <mat-form-field appearance="outline">
               <mat-label>Nombre</mat-label>
               <input matInput formControlName="first_name" />
@@ -38,7 +38,7 @@
               <input matInput formControlName="phone" />
             </mat-form-field>
           </div>
-          <div class="col-span-2">
+          <div class="sm:col-span-2">
             <mat-form-field appearance="outline">
               <mat-label>Direcion</mat-label>
               <input matInput formControlName="address" />
@@ -78,7 +78,7 @@
         [stepControl]="petsFormArray"
         label="Datos mascotas"
       >
-        <div class="flex px-4 py-3 items-center">
+        <div class="flex items-center p-3">
           <div class="text-lg">Mascotas</div>
           <div class="flex-1"></div>
           <div>
@@ -87,33 +87,34 @@
             </button>
           </div>
         </div>
-        <div class="flex flex-col gap-y-4 overflow-y-scroll max-h-96 px-2">
+        <div class="flex flex-col gap-y-4 overflow-y-scroll max-h-96">
           <div *ngFor="let control of petsFormArray.controls; let i = index">
-            <div class="border-2 border-gray-300 rounded-xl">
+            <div class="border-2 border-gray-300 rounded-xl px-2 sm:px-4">
               <div class="flex justify-end">
                 <button
                   mat-icon-button
                   aria-label="Remove pet"
                   matTooltip="Remover"
+                  color="warn"
                   (click)="removePet(i)"
                 >
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
-              <div class="flex items-center gap-x-4 p-4">
-                <div class="w-2/5">
+              <div class="flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-full sm:w-2/5">
                   <image-uploader
                     [preview]="petsList()[i].image"
                     (fileChange)="selectImage($event, i)"
                     (onImageRemoved)="removeImage(i)"
                   />
                 </div>
-                <div class="w-3/5">
+                <div class="w-full sm:w-3/5">
                   <div
-                    class="grid grid-cols-3 gap-x-3 gap-y-1"
+                    class="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1"
                     [formGroupName]="i"
                   >
-                    <div class="col-span-2">
+                    <div class="sm:col-span-2">
                       <mat-form-field appearance="outline">
                         <mat-label>Nombre</mat-label>
                         <input matInput formControlName="name" />
@@ -134,7 +135,7 @@
                         <mat-datepicker #pickerBirth></mat-datepicker>
                       </mat-form-field>
                     </div>
-                    <div class="col-span-3">
+                    <div class="sm:col-span-3">
                       <simple-select-search
                         placeholder="Seleccione una raza"
                         label="Raza"
@@ -183,7 +184,7 @@
                         <mat-datepicker #picker></mat-datepicker>
                       </mat-form-field>
                     </div>
-                    <div class="col-span-2">
+                    <div class="sm:col-span-2">
                       <mat-form-field appearance="outline">
                         <mat-label>Descripcion</mat-label>
                         <textarea
@@ -207,5 +208,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-flat-button (click)="save()" [disabled]="form.invalid">Guardar</button>
+  <button mat-flat-button (click)="save()" [disabled]="form.invalid">
+    Guardar
+  </button>
 </mat-dialog-actions>

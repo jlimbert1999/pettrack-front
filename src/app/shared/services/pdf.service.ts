@@ -8,20 +8,28 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 import { Owner, Pet } from '../../pets/domain';
 import { FileService } from './file.service';
+import { treatment } from '../../pets/infrastructure';
+
+interface petDetailProps {
+  pet: Pet;
+  treatments: treatment[];
+}
 @Injectable({
   providedIn: 'root',
 })
 export class PdfService {
   private fileService = inject(FileService);
 
-  async generateOwnerSheet() {}
-
-  async generatePetSheet(owner: Owner, pets: Pet[]) {
-    const backgroundImage = await this._getFileAsBase64('/images/banner.jpg');
+  async generatePetSheet(owner: Owner, details: petDetailProps[]) {
+    const backgroundImage = await this._getFileAsBase64(
+      '/images/banner-2.jpeg'
+    );
     const headerImage = await this._getFileAsBase64('/images/institution.jpeg');
     const sloganImage = await this._getFileAsBase64('/images/slogan.png');
     const petImages = await Promise.all(
-      pets.map((pet) => (pet.image ? this._getFileAsBase64(pet.image) : null))
+      details.map(({ pet }) =>
+        pet.image ? this._getFileAsBase64(pet.image) : null
+      )
     );
     const docDefinition: TDocumentDefinitions = {
       header: {
@@ -51,7 +59,6 @@ export class PdfService {
         ],
       },
       footer: {
-        margin: [0, 0, 20, 0],
         alignment: 'right',
         fontSize: 10,
         text: `Generado el ${new Date().toLocaleString()}`,
@@ -63,13 +70,13 @@ export class PdfService {
           alignment: 'center',
           opacity: 0.25,
           width: 500,
-          absolutePosition: { y: pageSize.height / 4 },
+          absolutePosition: { y: pageSize.height / 2.4 },
         };
       },
       pageSize: 'LETTER',
       pageMargins: [30, 100, 30, 30],
       content: [
-        ...pets.map<Content[]>((pet, index) => [
+        ...details.map<Content[]>(({ pet, treatments }, index) => [
           { text: 'DATOS GENERALES DEL PROPIETARIO', bold: true },
           {
             marginBottom: 10,
@@ -181,13 +188,34 @@ export class PdfService {
               },
             ],
           },
-          // TODO ADD PET HISTORY TABLE
+          { text: 'Listado de tratamientos', marginTop: 20, marginBottom: 5 },
+          {
+            fontSize: 10,
+            table: {
+              dontBreakRows: true,
+              headerRows: 1,
+              widths: [100, 150, 100, '*'],
+              body: [
+                ['Tratamiento', 'Nombre', 'Fecha', 'Lugar'],
+                ...(treatments.length === 0
+                  ? [['Sin registros', '', '', '']] // Si no hay tratamientos, muestra "Sin registros"
+                  : treatments.map((treatment) => [
+                      treatment.typeTreatment.category,
+                      treatment.typeTreatment.name,
+                      new Date(treatment.date).toLocaleDateString(),
+                      treatment.medicalCenter.name,
+                    ])),
+              ],
+            },
+            layout: 'lightHorizontalLines',
+          },
           {
             style: 'tableExample',
-            margin: [70, 200, 80, 0],
+            margin: [70, 40, 80, 0],
             table: {
               heights: [70, 10],
               widths: [200, 200],
+              dontBreakRows: true,
               body: [
                 ['', ''],
                 [
@@ -199,7 +227,7 @@ export class PdfService {
                 ],
               ],
             },
-            ...(index < pets.length - 1 && { pageBreak: 'after' }),
+            ...(index < details.length - 1 && { pageBreak: 'after' }),
           },
         ]),
       ],
@@ -207,64 +235,99 @@ export class PdfService {
     pdfMake.createPdf(docDefinition).print();
   }
 
-  generateTreatmentSheet() {
+  async generateCredential(pet: Pet) {
+    const photo = await this._getFileAsBase64(
+      pet.image ?? '/images/no-image.jpg'
+    );
+    const qr = `http://10.0.38.30:55600/pets/${pet.id}`;
     const def: TDocumentDefinitions = {
-      pageSize: 'A5',
-      pageMargins: [20, 30, 20, 30],
+      pageSize: { width: 400, height: 250 },
+      pageMargins: [10, 10, 10, 10],
       content: [
         {
-          text: 'Carnet de Vacunación',
+          text: 'REGISTRO UNICO DE MASCOTAS',
           style: 'header',
           alignment: 'center',
-          margin: [0, 20, 0, 20],
+          margin: [0, 0, 0, 5],
         },
         {
-          text: 'Nombre de la Mascota: [Nombre]',
+          text: 'DATOS GENERALES',
           style: 'subheader',
-          margin: [0, 10, 0, 5],
+          alignment: 'center',
+          margin: [0, 0, 0, 10],
         },
         {
-          text: 'Raza: [Raza]',
-          style: 'subheader',
-          margin: [0, 10, 0, 5],
-        },
-        {
-          text: 'Vacunas Administradas:',
-          style: 'subheader',
-          margin: [0, 10, 0, 5],
-        },
-        {
-          ul: [
-            '1. [Vacuna 1] - [Fecha]',
-            '2. [Vacuna 2] - [Fecha]',
-            // Agrega más vacunas según sea necesario
+          columns: [
+            {
+              // Imagen de la mascota
+              image: photo, // Aquí coloca el string base64 de tu imagen
+              width: 120,
+              height: 120,
+            },
+            {
+              // Información del carnet
+              margin: [10, 0, 0, 0],
+              stack: [
+                { text: `CODIGO ${pet.code}`, style: 'important' },
+                {
+                  text: `FECHA REGISTRO ${pet.createdAt.toLocaleString()}`,
+                  style: 'important',
+                },
+                { text: `NOMBRE: ${pet.name}`, style: 'info' },
+                {
+                  text: `${pet.breed.species} - ${pet.breed.name}`,
+                  style: 'info',
+                },
+                { text: `${pet.owner?.fullname}`, style: 'info' },
+              ],
+            },
+            {
+              // Código QR y segunda imagen pequeña
+              stack: [
+                {
+                  text: '',
+                  margin: [0, 0, 0, 10],
+                },
+                {
+                  qr: qr, // Reemplaza con el contenido del QR
+                  fit: 80,
+                  alignment: 'center',
+                },
+              ],
+            },
           ],
-          margin: [0, 5, 0, 5],
+        },
+        {
+          text: `En caso de perdida llamar a ${pet.owner?.phone}`,
+          style: 'emergency',
+          margin: [0, 10, 0, 0],
         },
       ],
       styles: {
         header: {
-          fontSize: 24,
+          fontSize: 12,
           bold: true,
-          color: '#4A90E2', // Color del texto
-          margin: [0, 20, 0, 20],
+          color: 'green',
         },
         subheader: {
           fontSize: 18,
           bold: true,
-          margin: [0, 10, 0, 5],
+          color: 'green',
         },
-        paragraph: {
-          fontSize: 14,
-          margin: [0, 5, 0, 5],
+        important: {
+          fontSize: 10,
+          bold: true,
+          color: 'red',
         },
-      },
-      footer: function (currentPage, pageCount) {
-        return {
-          text: 'Página ' + currentPage + ' de ' + pageCount,
+        info: {
+          fontSize: 10,
+          bold: true,
+        },
+        emergency: {
+          fontSize: 8,
+          color: 'red',
           alignment: 'center',
-          margin: [0, 10, 0, 0],
-        };
+        },
       },
     };
     pdfMake.createPdf(def).print();

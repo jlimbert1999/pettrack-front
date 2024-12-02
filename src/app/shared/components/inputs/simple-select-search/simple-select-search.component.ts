@@ -66,7 +66,7 @@ export class SimpleSelectSearchComponent<T> implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   label = input<string>();
-  value = input<T>();
+  value = input<T | null | undefined>();
   elements = input.required<SimpleSelectOption<T>[]>();
   placeholder = input<string>('Buscar....');
   isRequired = input<boolean>(true);

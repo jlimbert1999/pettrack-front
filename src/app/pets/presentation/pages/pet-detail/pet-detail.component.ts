@@ -13,15 +13,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
-import { ImageLoaderComponent } from '../../../../shared';
+import { ImageLoaderComponent, PdfService } from '../../../../shared';
 import { Pet } from '../../../domain';
 import { treatment } from '../../../infrastructure';
 import { PetHistoryComponent } from '../../components';
 import { PetsService, TreatmentService } from '../../services';
-import { PetTreatmentDialogComponent } from '../pets-manage/pet-treatment-dialog/pet-treatment-dialog.component';
 
 @Component({
   selector: 'app-pet-detail',
@@ -41,10 +39,10 @@ import { PetTreatmentDialogComponent } from '../pets-manage/pet-treatment-dialog
 })
 export default class PetDetailComponent implements OnInit {
   private location = inject(Location);
-  private dialogRef = inject(MatDialog);
 
   private petService = inject(PetsService);
   private treatmentService = inject(TreatmentService);
+  private pdfService = inject(PdfService);
 
   @Input('id') petId: string;
 
@@ -61,24 +59,18 @@ export default class PetDetailComponent implements OnInit {
     this.location.back();
   }
 
-  addTreatment() {
-    const dialogRef = this.dialogRef.open(PetTreatmentDialogComponent, {
-      width: '600px',
-      maxWidth: '600px',
-      data: this.pet(),
-    });
-    dialogRef.afterClosed().subscribe((result?: treatment) => {
-      if (!result) return;
-      this.history.update((values) => [result, ...values]);
-    });
-  }
-
   filterTreatments(category: string) {
     return this.treatmentService
       .getPetTreatments(this.petId, category)
       .subscribe((resp) => {
         this.history.set(resp);
       });
+  }
+
+  async generateCrendential() {
+    if (this.pet()) {
+      await this.pdfService.generateCredential(this.pet()!);
+    }
   }
 
   private _getPetDetails() {

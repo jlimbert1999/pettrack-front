@@ -1,51 +1,67 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import { map, Observable } from 'rxjs';
+
 import { Pet } from '../../../../domain';
+import { TreatmentService } from '../../../services';
 import {
   SimpleSelectOption,
   SimpleSelectSearchComponent,
 } from '../../../../../shared';
-import { TreatmentService } from '../../../services';
 
 @Component({
-  selector: 'app-pet-treatment-dialog',
+  selector: 'app-pets-treatments-dialog',
   imports: [
-    ReactiveFormsModule,
+    CommonModule,
     MatDialogModule,
-    MatButtonModule,
+    ReactiveFormsModule,
+    MatListModule,
+    MatIconModule,
+    MatFormFieldModule,
     MatSelectModule,
+    MatButtonModule,
     SimpleSelectSearchComponent,
   ],
-  templateUrl: './pet-treatment-dialog.component.html',
+  templateUrl: './pets-treatments-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PetTreatmentDialogComponent {
+export class PetsTreatmentsDialogComponent {
+  private dialogRef = inject(MatDialogRef);
   private formBuilder = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef<PetTreatmentDialogComponent>);
   private treatmentService = inject(TreatmentService);
-  data = inject<Pet>(MAT_DIALOG_DATA);
+  data = inject<Pet[]>(MAT_DIALOG_DATA);
 
   centers = toSignal(this._getCenters(), { initialValue: [] });
   categories = toSignal(this._getCategories(), { initialValue: [] });
-
   types = signal<SimpleSelectOption<number>[]>([]);
 
   formTreatment = this.formBuilder.group({
     typeTreamentId: [null, Validators.required],
     medicalCenterId: [null, Validators.required],
+    petIds: [null, Validators.required],
   });
 
   save() {
+    if (this.formTreatment.invalid) return;
     this.treatmentService
-      .create(this.formTreatment.value, this.data.id)
+      .create(this.formTreatment.value)
       .subscribe((resp) => this.dialogRef.close(resp));
   }
 

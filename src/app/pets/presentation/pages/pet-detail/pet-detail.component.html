@@ -4,12 +4,8 @@
   </button>
   <span class="ml-4">Detalle</span>
   <span class="flex-1"></span>
-  <button
-    mat-icon-button
-    class="example-icon favorite-icon"
-    aria-label="Example icon-button with heart icon"
-  >
-    <mat-icon>favorite</mat-icon>
+  <button mat-icon-button (click)="generateCrendential()">
+    <mat-icon>badge</mat-icon>
   </button>
 </mat-toolbar>
 @if(isLoading()){
@@ -30,7 +26,7 @@
           </div>
           <div class="w-full sm:w-3/5">
             <div class="px-2 sm:px-0">
-              <p class="text-base/7 text-3xl font-semibold text-gray-900">
+              <p class="text-2xl font-semibold text-gray-900">
                 {{ pet()?.name }}
               </p>
             </div>
@@ -142,10 +138,10 @@
           </mat-chip-listbox>
         </div>
         <div class="w-full sm:w-[120px] mt-4 sm:mt-0">
-          <button class="w-full" mat-flat-button (click)="addTreatment()">
+          <!-- <button class="w-full" mat-flat-button (click)="addTreatment()">
             <mat-icon>add</mat-icon>
             Agregar
-          </button>
+          </button> -->
         </div>
       </div>
 

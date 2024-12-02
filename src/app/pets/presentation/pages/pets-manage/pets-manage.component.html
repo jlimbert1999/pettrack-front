@@ -1,4 +1,4 @@
-<div class="animate-fade">
+<div class="animate__animated animate__fadeIn">
   <div class="flex px-4 py-3 items-center example-orange-primary-container">
     <div class="text-2xl">Mascotas</div>
     <div class="flex-1"></div>
@@ -30,6 +30,7 @@
         <simple-select-search
           label="Distrito"
           placeholder="Distrito del propietario"
+          [value]="formFilter.get('district')?.value"
           [elements]="districts()"
           (onSelect)="formFilter.get('district')?.setValue($event)"
         />
@@ -41,6 +42,7 @@
       </div>
     </div>
   </ng-template>
+
   <div class="flex justify-end py-2">
     <div class="w-full px-2 sm:w-1/4 h-11">
       <search-input (onSearch)="search($event)" placeholder="Nombre / Codigo" />

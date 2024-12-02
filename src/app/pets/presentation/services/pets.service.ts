@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { pet, PetMapper } from '../../infrastructure';
 import { breed } from '../../../administration/infrastructure';
+import { pet, PetMapper } from '../../infrastructure';
+import { Pet } from '../../domain';
+import { SimpleSelectOption } from '../../../shared';
 
 interface findProps {
   limit: number;
@@ -12,11 +14,22 @@ interface findProps {
   term?: string;
   formFilter: Object;
 }
+
+interface cache {
+  datasource: Pet[];
+  datasize: number;
+  index: number;
+  limit: number;
+  term: string;
+  districts: SimpleSelectOption<number>[];
+  formFilter: object;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class PetsService {
   private readonly url = `${environment.apiUrl}/pets`;
+  cache = signal<cache | null>(null);
 
   constructor(private http: HttpClient) {}
 

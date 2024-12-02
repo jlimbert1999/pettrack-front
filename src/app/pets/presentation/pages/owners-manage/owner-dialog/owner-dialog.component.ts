@@ -86,6 +86,7 @@ export class OwnerDialogComponent implements OnInit {
   readonly animalSex = ['macho', 'hembra'];
   breeds = toSignal(this._getBreeds(), { initialValue: [] });
   districts = toSignal(this._getDistricts(), { initialValue: [] });
+  isPosting = signal(false);
 
   data?: { owner: Owner; pets: Pet[] } = inject(MAT_DIALOG_DATA);
 
@@ -115,6 +116,7 @@ export class OwnerDialogComponent implements OnInit {
 
   save(): void {
     if (this.form.invalid) return;
+    this.isPosting.set(true);
     const subscription = this._createFileUploadTask().pipe(
       switchMap((files) => {
         const newForm = {

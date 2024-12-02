@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Registro Tratamiento</h2>
+<mat-dialog-content>
+  <form [formGroup]="formTreatment">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-2 pt-2">
+      <div class="sm:col-span-3">
+        <simple-select-search
+          [elements]="centers()"
+          label="Centro de salud"
+          placeholder="Seleccione el centro de salud"
+          (onSelect)="formTreatment.get('medicalCenterId')?.setValue($event)"
+        />
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria</mat-label>
+          <mat-select (selectionChange)="getTypes($event.value)">
+            @for (category of categories(); track $index) {
+            <mat-option [value]="category.value">{{
+              category.text
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <simple-select-search
+          [elements]="types()"
+          label="Tipo"
+          placeholder="Seleccione el tipo de tratamiento"
+          (onSelect)="formTreatment.get('typeTreamentId')?.setValue($event)"
+        />
+      </div>
+      <div class="sm:col-span-3">
+        <mat-selection-list formControlName="petIds">
+          <div mat-subheader>Seleccione las Mascotas</div>
+          @for (pet of data; track pet.id) {
+          <mat-list-option [value]="pet.id">
+            <img [src]="pet.image ?? 'images/no-image.jpg'" matListItemAvatar />
+            <div matListItemTitle>{{ pet.name }}</div>
+            <div matListItemLine>Codigo: {{ pet.code }}</div>
+          </mat-list-option>
+          }
+        </mat-selection-list>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="warn">Cancelar</button>
+  <button mat-flat-button [disabled]="formTreatment.invalid" (click)="save()">
+    Guardar
+  </button>
+</mat-dialog-actions>

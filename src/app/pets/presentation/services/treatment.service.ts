@@ -40,7 +40,7 @@ export class TreatmentService {
     return this.http.get<typeTreatment[]>(`${this.url}/types`, { params });
   }
 
-  create(form: Object, petId: string) {
-    return this.http.post<treatment>(this.url, { ...form, petId });
+  create(form: Object) {
+    return this.http.post<treatment>(this.url, { ...form });
   }
 }

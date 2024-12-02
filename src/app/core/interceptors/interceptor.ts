@@ -25,18 +25,19 @@ export function loggingInterceptor(
       `Bearer ${localStorage.getItem('token') || ''}`
     ),
   });
+  if (['POST', 'PATCH', 'PUT'].includes(reqWithHeader.method)) {
+    alertService.showSaveLoader();
+  }
 
-  // appearanceService.showLoading();
   return next(reqWithHeader).pipe(
     catchError((error) => {
-      console.log(error);
       if (error instanceof HttpErrorResponse) {
         handleHttpErrors(error, alertService);
       }
       return throwError(() => Error);
     }),
     finalize(() => {
-      // appearanceService.hideLoading();
+      alertService.closeSaveLoader();
     })
   );
 }

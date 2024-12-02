@@ -16,8 +16,10 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { OwnerDialogComponent } from './owner-dialog/owner-dialog.component';
 import { PdfService, SearchInputComponent } from '../../../../shared';
-import { OwnersService } from '../../services';
+import { OwnersService, TreatmentService } from '../../services';
 import { Owner, Pet } from '../../../domain';
+import { PetsTreatmentsDialogComponent } from './pets-treatments-dialog/pets-treatments-dialog.component';
+import { forkJoin, lastValueFrom } from 'rxjs';
 
 interface datasource {
   owner: Owner;
@@ -40,6 +42,7 @@ interface datasource {
 export default class OwnersManageComponent implements OnInit {
   private dialogRef = inject(MatDialog);
   private onwerService = inject(OwnersService);
+  private treatService = inject(TreatmentService);
   private pdfService = inject(PdfService);
 
   datasource = signal<datasource[]>([]);
@@ -78,6 +81,7 @@ export default class OwnersManageComponent implements OnInit {
         return [result, ...values];
       });
       this.datasize.update((value) => (value += 1));
+      this.treatments(result);
     });
   }
 
@@ -94,6 +98,18 @@ export default class OwnersManageComponent implements OnInit {
         values[index] = result;
         return [...values];
       });
+    });
+  }
+
+  async treatments(element: datasource) {
+    const dialogRef = this.dialogRef.open(PetsTreatmentsDialogComponent, {
+      width: '800px',
+      maxWidth: '800px',
+      data: element.pets,
+    });
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (!result) return;
+      await this.generatePetSheet(element);
     });
   }
 
@@ -118,7 +134,15 @@ export default class OwnersManageComponent implements OnInit {
     this.getData();
   }
 
-  async generatePetSheet(owner: datasource) {
-    await this.pdfService.generatePetSheet(owner.owner, owner.pets);
+  async generatePetSheet(element: datasource) {
+    const treatments = await Promise.all(
+      element.pets.map((pet) =>
+        lastValueFrom(this.treatService.getPetTreatments(pet.id))
+      )
+    );
+    await this.pdfService.generatePetSheet(
+      element.owner,
+      element.pets.map((pet, index) => ({ pet, treatments: treatments[index] }))
+    );
   }
 }
