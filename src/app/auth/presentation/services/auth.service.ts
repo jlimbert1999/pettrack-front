@@ -59,6 +59,7 @@ export class AuthService {
         tap(({ menu }) => this._menu.set(menu)),
         map(({ token }) => this._setAuthentication(token)),
         catchError(() => {
+          this.logout();
           return of(false);
         })
       );

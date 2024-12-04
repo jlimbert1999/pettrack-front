@@ -87,20 +87,10 @@ export default class PetsManageComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.getData();
+    this._loadCache();
   }
 
   getData(): void {
-    if (this.petService.cache() && this.petService.keepAlive()) {
-      const { datasize, datasource, term, limit, index, formFilter } =
-        this.petService.cache()!;
-      this.datasize.set(datasize);
-      this.datasource.set(datasource);
-      this.term.set(term);
-      this.limit.set(limit);
-      this.index.set(index);
-      this.formFilter.patchValue(formFilter);
-    }
     this.petService
       .findAll({
         limit: this.limit(),
@@ -147,6 +137,21 @@ export default class PetsManageComponent implements OnInit {
       .pipe(
         map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
       );
+  }
+
+  private _loadCache() {
+    if (this.petService.cache() && this.petService.keepAlive()) {
+      const { datasize, datasource, term, limit, index, formFilter } =
+        this.petService.cache()!;
+      this.datasize.set(datasize);
+      this.datasource.set(datasource);
+      this.term.set(term);
+      this.limit.set(limit);
+      this.index.set(index);
+      this.formFilter.patchValue(formFilter);
+    } else {
+      this.getData();
+    }
   }
 
   private _saveCache() {

@@ -28,6 +28,8 @@ export function loggingInterceptor(
   if (['POST', 'PATCH', 'PUT'].includes(reqWithHeader.method)) {
     alertService.showSaveLoader();
   }
+  alertService.showSnackbar({ message: 'mensaje DE texto' });
+
 
   return next(reqWithHeader).pipe(
     catchError((error) => {
