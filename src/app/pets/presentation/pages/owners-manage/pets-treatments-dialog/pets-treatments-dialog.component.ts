@@ -12,11 +12,14 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+
 import { map, Observable } from 'rxjs';
 
 import { Pet } from '../../../../domain';
@@ -25,21 +28,25 @@ import {
   SimpleSelectOption,
   SimpleSelectSearchComponent,
 } from '../../../../../shared';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-pets-treatments-dialog',
   imports: [
     CommonModule,
     MatDialogModule,
+    MatFormFieldModule,
     ReactiveFormsModule,
     MatListModule,
     MatIconModule,
-    MatFormFieldModule,
+    MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatDatepickerModule,
     SimpleSelectSearchComponent,
   ],
   templateUrl: './pets-treatments-dialog.component.html',
+  providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PetsTreatmentsDialogComponent {
@@ -56,6 +63,7 @@ export class PetsTreatmentsDialogComponent {
     typeTreamentId: [null, Validators.required],
     medicalCenterId: [null, Validators.required],
     petIds: [null, Validators.required],
+    date: [null, Validators.required],
   });
 
   save() {

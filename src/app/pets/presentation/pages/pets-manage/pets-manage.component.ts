@@ -99,6 +99,7 @@ export default class PetsManageComponent implements OnInit {
         formFilter: this.formFilter.value,
       })
       .subscribe(({ pets, length }) => {
+        console.log('get http data');
         this.datasource.set(pets);
         this.datasize.set(length);
       });
@@ -129,9 +130,6 @@ export default class PetsManageComponent implements OnInit {
   }
 
   private _getDistricts(): Observable<SimpleSelectOption<number>[]> {
-    if (this.petService.cache()?.districts) {
-      return of(this.petService.cache()!.districts);
-    }
     return this.ownerService
       .getDistricts()
       .pipe(

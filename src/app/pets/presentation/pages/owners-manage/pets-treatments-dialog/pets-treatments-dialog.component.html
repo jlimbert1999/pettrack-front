@@ -2,13 +2,24 @@
 <mat-dialog-content>
   <form [formGroup]="formTreatment">
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-2 pt-2">
-      <div class="sm:col-span-3">
+      <div class="sm:col-span-2">
         <simple-select-search
           [elements]="centers()"
           label="Centro de salud"
           placeholder="Seleccione el centro de salud"
           (onSelect)="formTreatment.get('medicalCenterId')?.setValue($event)"
         />
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Esterilización</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline">

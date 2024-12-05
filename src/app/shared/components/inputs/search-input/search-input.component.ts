@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-    selector: 'search-input',
-    imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatIconModule],
-    template: `
+  selector: 'search-input',
+  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatIconModule],
+  template: `
     <mat-form-field appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
       <mat-label>Buscar</mat-label>
@@ -26,7 +26,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
       />
     </mat-form-field>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent implements OnInit {
   control = new FormControl();
@@ -42,6 +42,8 @@ export class SearchInputComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.control.patchValue(this.initValue());
+    if (this.initValue()) {
+      this.control.patchValue(this.initValue());
+    }
   }
 }
