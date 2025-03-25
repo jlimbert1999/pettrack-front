@@ -33,7 +33,7 @@ export function loggingInterceptor(
       if (error instanceof HttpErrorResponse) {
         handleHttpErrors(error, alertService);
       }
-      return throwError(() => Error);
+      return throwError(() =>  error);
     }),
     finalize(() => {
       alertService.closeSaveLoader();

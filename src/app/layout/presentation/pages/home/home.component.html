@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
+<!-- <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     #drawer
     class="sidenav px-3"
@@ -58,4 +58,68 @@
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
+
+<div class="example-container" [class.example-is-mobile]="isMobile()">
+  <mat-toolbar class="example-toolbar">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="example-app-name">Responsive App</h1>
+    <span class="flex-1"></span>
+    <button
+      mat-icon-button
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      (click)="isProfileOpen = !isProfileOpen"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isProfileOpen"
+    (overlayOutsideClick)="isProfileOpen = false"
+  >
+    <div class="mat-elevation-z8 w-full sm:w-[380px]">
+      <profile [(isOpen)]="isProfileOpen" />
+    </div>
+  </ng-template>
+
+  <mat-sidenav-container
+    class="example-sidenav-container"
+    [style.marginTop.px]="isMobile() ? 56 : 0"
+  >
+    <mat-sidenav
+      #snav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [fixedInViewport]="isMobile()"
+      fixedTopGap="56"
+      [opened]="true"
+    >
+      <div class="p-3">
+        <mat-nav-list>
+          @for (nav of menu; track nav) {
+          <a
+            mat-list-item
+            [routerLink]="nav.routerLink"
+            #link="routerLinkActive"
+            routerLinkActive
+            [activated]="link.isActive"
+            class="mb-2"
+          >
+            <mat-icon matListItemIcon>{{ nav.icon }}</mat-icon>
+            <span class="ml-2">{{ nav.label }}</span>
+          </a>
+          }
+        </mat-nav-list>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet />
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
