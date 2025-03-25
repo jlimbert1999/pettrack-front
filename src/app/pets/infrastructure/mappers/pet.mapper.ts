@@ -7,6 +7,7 @@ export class PetMapper {
     birthDate,
     neuter_date,
     owner,
+    image,
     ...props
   }: pet): Pet {
     return new Pet({
@@ -15,6 +16,7 @@ export class PetMapper {
       createdAt: new Date(createdAt),
       birthDate: birthDate ? new Date(birthDate) : null,
       neuter_date: neuter_date ? new Date(neuter_date) : null,
+      image: image ?? 'images/no-image.jpg',
     });
   }
 }

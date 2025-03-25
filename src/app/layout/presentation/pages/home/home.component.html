@@ -65,7 +65,6 @@
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <h1 class="example-app-name">Responsive App</h1>
     <span class="flex-1"></span>
     <button
       mat-icon-button
@@ -98,6 +97,7 @@
       [fixedInViewport]="isMobile()"
       fixedTopGap="56"
       [opened]="true"
+      class="left-menu"
     >
       <div class="p-3">
         <mat-nav-list>

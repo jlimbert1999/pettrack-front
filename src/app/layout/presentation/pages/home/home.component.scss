@@ -1,5 +1,3 @@
-
-
 .example-container {
   display: flex;
   flex-direction: column;
@@ -15,15 +13,15 @@
   z-index: 2;
 }
 
-h1.example-app-name {
-  margin-left: 8px;
-}
 
 .example-sidenav-container {
   flex: 1;
-  background: var(--mat-sys-surface-container-low)
 }
 
 .example-is-mobile .example-sidenav-container {
   flex: 1 0 auto;
+}
+
+.left-menu {
+  background: var(--mat-sys-surface-container-low);
 }

@@ -45,7 +45,11 @@
 
   <div class="flex justify-end py-2">
     <div class="w-full px-2 sm:w-1/4 h-11">
-      <search-input [initValue]="term()" (onSearch)="search($event)" placeholder="Nombre / Codigo" />
+      <search-input
+        [initValue]="term()"
+        (onSearch)="search($event)"
+        placeholder="Nombre / Codigo"
+      />
     </div>
   </div>
 
@@ -89,15 +93,20 @@
 
         <ng-container matColumnDef="options">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element" class="w-8">
-            <button
-              mat-icon-button
-              aria-label="Show details"
-              [routerLink]="['../pets', element.id]"
-              matTooltip="Ver detalle"
-            >
-              <mat-icon>chevron_right</mat-icon>
+          <td mat-cell *matCellDef="let item" class="w-8">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="showDetail(item)">
+                <mat-icon>info</mat-icon>
+                <span>Detalle mascota</span>
+              </button>
+              <button mat-menu-item (click)="captureLog(item)">
+                <mat-icon>health_and_safety</mat-icon>
+                <span>Historial de capturas</span>
+              </button>
+            </mat-menu>
           </td>
         </ng-container>
 

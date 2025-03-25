@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import { isAuthenticatedGuard } from './layout/presentation/guards/is-authenticated.guard';
-import { isNotAuthenticatedGuard } from './layout/presentation/guards/is-not-authenticated.guard';
+import {
+  isAuthenticatedGuard,
+  isNotAuthenticatedGuard,
+} from './layout/presentation/guards';
 
 export const routes: Routes = [
   {
@@ -31,12 +33,6 @@ export const routes: Routes = [
         path: 'pets',
         loadComponent: () =>
           import('./pets/presentation/pages/pets-manage/pets-manage.component'),
-      },
-      {
-        title: 'Mascotas',
-        path: 'pets/:id',
-        loadComponent: () =>
-          import('./pets/presentation/pages/pet-detail/pet-detail.component'),
       },
       {
         title: 'Usuarios',

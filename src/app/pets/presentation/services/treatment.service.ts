@@ -26,9 +26,9 @@ export class TreatmentService {
       .pipe(map((resp) => resp.map((el) => el.category)));
   }
 
-  getPetTreatments(petId: string, category?: string) {
+  getPetTreatments(petId: string, category: null | string, offset?: number) {
     const params = new HttpParams({
-      fromObject: { ...(category && { category }) },
+      fromObject: { ...(category && { category }), ...(offset && { offset }) },
     });
     return this.http.get<treatment[]>(`${this.url}/pet/${petId}`, { params });
   }

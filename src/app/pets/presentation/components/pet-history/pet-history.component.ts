@@ -1,4 +1,4 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,8 +7,6 @@ import { CommonModule } from '@angular/common';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { treatment } from '../../../infrastructure';
-import { PdfService } from '../../../../shared';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'pet-history',
@@ -35,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
               class="flex justify-between w-full flex-col gap-y-2 sm:gap-y-0 sm:flex-row"
             >
               <div>
-                <p class="text-base/7 font-semibold text-xl">
+                <p class="font-semibold text-xl">
                   {{ pulication.typeTreatment.name }}
                 </p>
                 <p class="text-md font-medium">
@@ -54,11 +52,6 @@ import { MatDialog } from '@angular/material/dialog';
           <mat-card-content>
             <p>Centro de salud: {{ pulication.medicalCenter.name }}</p>
           </mat-card-content>
-          <!-- <mat-card-actions align="end">
-            <button mat-icon-button aria-label="Print sheet" (click)="test()">
-              <mat-icon>print</mat-icon>
-            </button>
-          </mat-card-actions> -->
         </mat-card>
         } @empty {
         <p class="font-medium">SIN REGISTROS</p>
@@ -68,7 +61,6 @@ import { MatDialog } from '@angular/material/dialog';
   `,
 })
 export class PetHistoryComponent {
-
   history = input.required<treatment[]>();
   containerRef = input.required<HTMLDivElement>();
 
@@ -78,6 +70,4 @@ export class PetHistoryComponent {
     this.onScroll.emit();
   }
 
-  test() {
-  }
 }

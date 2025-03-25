@@ -3,10 +3,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
+import { captureLog, pet, PetMapper } from '../../infrastructure';
 import { breed } from '../../../administration/infrastructure';
-import { pet, PetMapper } from '../../infrastructure';
-import { Pet } from '../../domain';
 import { SimpleSelectOption } from '../../../shared';
+import { Pet } from '../../domain';
 
 interface findProps {
   limit: number;
@@ -62,5 +62,14 @@ export class PetsService {
       fromObject: { ...(species && { species }) },
     });
     return this.http.get<breed[]>(`${this.url}/types/breeds`, { params });
+  }
+
+  createCaptureLog(id: string, form: Object) {
+    return this.http.post<captureLog>(`${this.url}/capture/${id}`, form);
+  }
+
+  getCaptureLogs(id: string, offset = 0) {
+    const params = new HttpParams({ fromObject: { offset } });
+    return this.http.get<captureLog[]>(`${this.url}/capture/${id}`, { params });
   }
 }

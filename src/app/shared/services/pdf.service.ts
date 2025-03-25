@@ -6,9 +6,10 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+import { AuthService } from '../../auth/presentation/services/auth.service';
+import { treatment } from '../../pets/infrastructure';
 import { Owner, Pet } from '../../pets/domain';
 import { FileService } from './file.service';
-import { treatment } from '../../pets/infrastructure';
 
 interface petDetailProps {
   pet: Pet;
@@ -19,6 +20,7 @@ interface petDetailProps {
 })
 export class PdfService {
   private fileService = inject(FileService);
+  private user = inject(AuthService).user();
 
   async generatePetSheet(owner: Owner, details: petDetailProps[]) {
     const backgroundImage = await this._getFileAsBase64(
@@ -61,16 +63,18 @@ export class PdfService {
       footer: {
         alignment: 'right',
         fontSize: 10,
+        marginRight: 20,
         text: `Generado el ${new Date().toLocaleString()}`,
       },
 
-      background: function (_, pageSize) {
+      background: function () {
         return {
           image: backgroundImage,
           alignment: 'center',
-          opacity: 0.25,
-          width: 500,
-          absolutePosition: { y: pageSize.height / 2.4 },
+          opacity: 0.2,
+          width: 400,
+          height: 150,
+          marginTop: 60,
         };
       },
       pageSize: 'LETTER',
@@ -177,7 +181,7 @@ export class PdfService {
                         ],
                         [
                           { text: 'FECHA ESTERILIZACIÓN:', bold: true },
-                          pet.neuter_date?.toDateString() ?? '----',
+                          pet.neuter_date?.toLocaleDateString() ?? '',
                         ],
                         [{ text: 'DESCRIPCION:', bold: true }, pet.description],
                       ],
@@ -188,7 +192,12 @@ export class PdfService {
               },
             ],
           },
-          { text: 'Listado de tratamientos', marginTop: 20, marginBottom: 5 },
+          {
+            text: 'LISTADO DE TRATAMIENTOS',
+            marginTop: 20,
+            marginBottom: 10,
+            bold: true,
+          },
           {
             fontSize: 10,
             table: {
@@ -210,7 +219,7 @@ export class PdfService {
             layout: 'lightHorizontalLines',
           },
           {
-            style: 'tableExample',
+            fontSize: 10,
             margin: [70, 40, 80, 0],
             table: {
               heights: [70, 10],
@@ -221,7 +230,7 @@ export class PdfService {
                 [
                   { text: owner.fullname.toUpperCase(), alignment: 'center' },
                   {
-                    text: 'Firma y sello de quien recibe',
+                    text: this.user?.fullname.toUpperCase() ?? '',
                     alignment: 'center',
                   },
                 ],
@@ -233,104 +242,6 @@ export class PdfService {
       ],
     };
     pdfMake.createPdf(docDefinition).print();
-  }
-
-  async generateCredential(pet: Pet) {
-    const photo = await this._getFileAsBase64(
-      pet.image ?? '/images/no-image.jpg'
-    );
-    const qr = `http://10.0.38.30:55600/pets/${pet.id}`;
-    const def: TDocumentDefinitions = {
-      pageSize: { width: 400, height: 250 },
-      pageMargins: [10, 10, 10, 10],
-      content: [
-        {
-          text: 'REGISTRO UNICO DE MASCOTAS',
-          style: 'header',
-          alignment: 'center',
-          margin: [0, 0, 0, 5],
-        },
-        {
-          text: 'DATOS GENERALES',
-          style: 'subheader',
-          alignment: 'center',
-          margin: [0, 0, 0, 10],
-        },
-        {
-          columns: [
-            {
-              // Imagen de la mascota
-              image: photo, // Aquí coloca el string base64 de tu imagen
-              width: 120,
-              height: 120,
-            },
-            {
-              // Información del carnet
-              margin: [10, 0, 0, 0],
-              stack: [
-                { text: `CODIGO ${pet.code}`, style: 'important' },
-                {
-                  text: `FECHA REGISTRO ${pet.createdAt.toLocaleString()}`,
-                  style: 'important',
-                },
-                { text: `NOMBRE: ${pet.name}`, style: 'info' },
-                {
-                  text: `${pet.breed.species} - ${pet.breed.name}`,
-                  style: 'info',
-                },
-                { text: `${pet.owner?.fullname}`, style: 'info' },
-              ],
-            },
-            {
-              // Código QR y segunda imagen pequeña
-              stack: [
-                {
-                  text: '',
-                  margin: [0, 0, 0, 10],
-                },
-                {
-                  qr: qr, // Reemplaza con el contenido del QR
-                  fit: 80,
-                  alignment: 'center',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          text: `En caso de perdida llamar a ${pet.owner?.phone}`,
-          style: 'emergency',
-          margin: [0, 10, 0, 0],
-        },
-      ],
-      styles: {
-        header: {
-          fontSize: 12,
-          bold: true,
-          color: 'green',
-        },
-        subheader: {
-          fontSize: 18,
-          bold: true,
-          color: 'green',
-        },
-        important: {
-          fontSize: 10,
-          bold: true,
-          color: 'red',
-        },
-        info: {
-          fontSize: 10,
-          bold: true,
-        },
-        emergency: {
-          fontSize: 8,
-          color: 'red',
-          alignment: 'center',
-        },
-      },
-    };
-    pdfMake.createPdf(def).print();
   }
 
   private async _getFileAsBase64(url: string): Promise<string> {

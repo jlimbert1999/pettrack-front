@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  DestroyRef,
   inject,
   OnInit,
   signal,
@@ -32,6 +31,9 @@ import {
 } from '../../../../shared';
 import { OwnersService, PetsService } from '../../services';
 import { Pet } from '../../../domain';
+import { MatDialog } from '@angular/material/dialog';
+import { CaptureLogComponent } from './capture-log/capture-log.component';
+import PetDetailComponent from './pet-detail/pet-detail.component';
 
 @Component({
   selector: 'app-pets-manage',
@@ -58,9 +60,7 @@ export default class PetsManageComponent implements OnInit {
   private petService = inject(PetsService);
   private ownerService = inject(OwnersService);
   private formBuilder = inject(FormBuilder);
-  private destroyRef = inject(DestroyRef).onDestroy(() => {
-    this._saveCache();
-  });
+  private dialogRef = inject(MatDialog);
 
   datasource = signal<Pet[]>([]);
   datasize = signal<number>(10);
@@ -70,7 +70,7 @@ export default class PetsManageComponent implements OnInit {
   offset = computed<number>(() => this.limit() * this.index());
   term = signal<string>('');
   isFilterOpen = false;
-  districts = toSignal(this._getDistricts(), { initialValue: [] });
+  districts = toSignal(this.getDistricts(), { initialValue: [] });
 
   formFilter: FormGroup = this.formBuilder.group({
     owner: [''],
@@ -87,7 +87,7 @@ export default class PetsManageComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this._loadCache();
+    this.getData();
   }
 
   getData(): void {
@@ -99,10 +99,25 @@ export default class PetsManageComponent implements OnInit {
         formFilter: this.formFilter.value,
       })
       .subscribe(({ pets, length }) => {
-        console.log('get http data');
         this.datasource.set(pets);
         this.datasize.set(length);
       });
+  }
+
+  captureLog(item: Pet): void {
+    this.dialogRef.open(CaptureLogComponent, {
+      width: '800px',
+      maxWidth: '800px',
+      data: item,
+    });
+  }
+
+  showDetail(item: Pet) {
+    this.dialogRef.open(PetDetailComponent, {
+      width: '700px',
+      maxWidth: '700px',
+      data: item,
+    });
   }
 
   filter() {
@@ -129,39 +144,11 @@ export default class PetsManageComponent implements OnInit {
     this.getData();
   }
 
-  private _getDistricts(): Observable<SimpleSelectOption<number>[]> {
+  private getDistricts(): Observable<SimpleSelectOption<number>[]> {
     return this.ownerService
       .getDistricts()
       .pipe(
         map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
       );
-  }
-
-  private _loadCache() {
-    if (this.petService.cache() && this.petService.keepAlive()) {
-      const { datasize, datasource, term, limit, index, formFilter } =
-        this.petService.cache()!;
-      this.datasize.set(datasize);
-      this.datasource.set(datasource);
-      this.term.set(term);
-      this.limit.set(limit);
-      this.index.set(index);
-      this.formFilter.patchValue(formFilter);
-    } else {
-      this.getData();
-    }
-  }
-
-  private _saveCache() {
-    this.petService.keepAlive.set(false);
-    this.petService.cache.set({
-      datasize: this.datasize(),
-      datasource: this.datasource(),
-      limit: this.limit(),
-      index: this.index(),
-      term: this.term(),
-      formFilter: this.formFilter.value,
-      districts: this.districts(),
-    });
   }
 }

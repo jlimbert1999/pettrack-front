@@ -1,0 +1,110 @@
+<h2 mat-dialog-title>Detalle mascota</h2>
+<mat-dialog-content>
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight>
+    <mat-tab label="Descripcion">
+      <div class="p-2">
+        <div class="group relative block overflow-hidden">
+          <div class="h-52 sm:h-56 w-full mb-6">
+            <img
+              [src]="data.image"
+              alt="Pet image"
+              class="w-full h-full object-contain"
+            />
+          </div>
+
+          <div class="relative py-2">
+            <dl class="-my-3 divide-y divide-gray-100 text-sm">
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Nombre</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.name }} / CODIGO: {{ data.code }}
+                </dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Raza</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.breed.species }} - {{ data.breed.name }} (
+                  {{ data.sex | uppercase }})
+                </dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Color</dt>
+                <dd class="text-gray-700 sm:col-span-2">{{ data.color }}</dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Registo</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.createdAt | date : "short" }}
+                </dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Esterilizado</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.is_neutered ? "SI" : "NO" }} /
+                  {{ data.neuter_date ?? "-" }}
+                </dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Propietario</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.owner?.fullname }} - {{ data.owner?.phone }}
+                </dd>
+              </div>
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Direccion</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  {{ data.owner?.address }}
+                </dd>
+              </div>
+
+              <div class="grid grid-cols-1 gap-1 py-1 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Descripcion</dt>
+                <dd class="text-gray-700 sm:col-span-2">
+                  @if(data.description){
+                  {{ data.description }}
+                  } @else {
+                  <span>--</span>
+                  }
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Historial">
+      <div
+        class="flex flex-col sm:flex-row items-center sm:justify-between p-4"
+      >
+        <div>
+          <mat-chip-listbox (change)="filterPetTreatments($event.value)">
+            <mat-chip-option [selected]="0" [value]="null">
+              Todos
+            </mat-chip-option>
+            @for (category of categories(); track $index) {
+            <mat-chip-option [value]="category">{{
+              category | titlecase
+            }}</mat-chip-option>
+            }
+          </mat-chip-listbox>
+        </div>
+      </div>
+
+      <div class="h-[350px] overflow-y-auto rounded-xl m-4" #containerRef>
+        <pet-history
+          [history]="history()"
+          [containerRef]="containerRef"
+          (onScroll)="onScroll()"
+        />
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>
