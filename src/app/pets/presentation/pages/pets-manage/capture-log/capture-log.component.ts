@@ -42,6 +42,18 @@ import { Pet } from '../../../../domain';
   template: `
     <h2 mat-dialog-title>Historial de capturas</h2>
     <mat-dialog-content>
+      <div class="mb-2 space-y-2 px-2">
+        <div class="flex gap-x-2">
+          <div class="w-1/6 font-semibold">Nombre</div>
+          <div class="w-4/6">{{ data.name }} / Codigo: {{ data.code }}</div>
+        </div>
+        <div class="flex gap-x-2">
+          <div class="w-1/6 font-semibold">Propietario</div>
+          <div class="w-4/6">
+            {{ data.owner?.fullname ?? 'Sin Propietario' | titlecase }}
+          </div>
+        </div>
+      </div>
       <form [formGroup]="form" (ngSubmit)="save()">
         <div class="flex flex-col sm:flex-row gap-3 items-center p-2">
           <div class="flex-1 h-12 flex flex-col sm:flex-row gap-2 w-full">
