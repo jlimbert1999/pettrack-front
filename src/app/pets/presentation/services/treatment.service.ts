@@ -43,4 +43,8 @@ export class TreatmentService {
   create(form: Object) {
     return this.http.post<treatment>(this.url, { ...form });
   }
+
+  remove(id: number) {
+    return this.http.delete<{ message: string }>(`${this.url}/${id}`);
+  }
 }

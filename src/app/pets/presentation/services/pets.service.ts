@@ -72,4 +72,8 @@ export class PetsService {
     const params = new HttpParams({ fromObject: { offset } });
     return this.http.get<captureLog[]>(`${this.url}/capture/${id}`, { params });
   }
+
+  removeCaptureLog(id: number) {
+    return this.http.delete<{ message: string }>(`${this.url}/capture/${id}`);
+  }
 }

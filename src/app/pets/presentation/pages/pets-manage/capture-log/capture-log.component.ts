@@ -88,20 +88,31 @@ import { Pet } from '../../../../domain';
       >
         <ul class="overflow-hidden">
           @for (log of logs(); track $index) {
-          <li>
-            <div class="p-2 sm:p-3">
+          <li class="mb-2">
+            <div class="p-2 sm:p-3 border rounded-lg">
               <div class="flex items-center justify-between">
                 <h3 class="text-lg leading-6 font-medium ">
                   {{ log.description }}
                 </h3>
-                <p class="mt-1 max-w-2xl text-sm">
-                  {{ log.date | date : 'short' }}
-                </p>
+                <div class="mt-1 ">
+                  <button mat-icon-button (click)="remove(log)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <!-- <p class="mt-1 max-w-2xl text-sm"></p> -->
               </div>
-              <div class="mt-2 flex items-center justify-between">
-                <p class="text-sm font-medium">
-                  {{ log.user.fullname | titlecase }} -
+              <div class="mt-2 flex flex-col text-sm">
+                <p>
+                  <strong class="mr-2">Usuario:</strong>
+                  {{ log.user.fullname | titlecase }}
+                </p>
+                <p>
+                  <strong class="mr-2">Descripcion:</strong>
                   {{ log.location ? log.location : 'Sin ubicación' }}
+                </p>
+                <p>
+                  <strong class="mr-2">Fecha:</strong>
+                  {{ log.date | date : 'short' }}
                 </p>
               </div>
             </div>
@@ -149,6 +160,14 @@ export class CaptureLogComponent implements OnInit {
         this.logs.update((values) => [resp, ...values]);
         this.form.reset({});
       });
+  }
+
+  remove(item: captureLog) {
+    this.petService.removeCaptureLog(item.id).subscribe(() => {
+      this.logs.update((values) =>
+        values.filter((value) => value.id !== item.id)
+      );
+    });
   }
 
   onScroll() {

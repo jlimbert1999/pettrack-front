@@ -10,6 +10,7 @@ import { AuthService } from '../../auth/presentation/services/auth.service';
 import { treatment } from '../../pets/infrastructure';
 import { Owner, Pet } from '../../pets/domain';
 import { FileService } from './file.service';
+import { environment } from '../../../environments/environment';
 
 interface petDetailProps {
   pet: Pet;
@@ -33,6 +34,7 @@ export class PdfService {
         pet.image ? this._getFileAsBase64(pet.image) : null
       )
     );
+    const qrData = `${environment.queryUrl}`;
     const docDefinition: TDocumentDefinitions = {
       header: {
         margin: [20, 20, 20, 40],
@@ -60,12 +62,12 @@ export class PdfService {
           },
         ],
       },
-      footer: {
-        alignment: 'right',
-        fontSize: 10,
-        marginRight: 20,
-        text: `Generado el ${new Date().toLocaleString()}`,
-      },
+      // footer: {
+      //   alignment: 'right',
+      //   fontSize: 10,
+      //   marginRight: 20,
+      //   text: `Generado el ${new Date().toLocaleString()}`,
+      // },
 
       background: function () {
         return {
@@ -218,25 +220,53 @@ export class PdfService {
             },
             layout: 'lightHorizontalLines',
           },
+          // {
+          //   fontSize: 10,
+          //   margin: [70, 40, 80, 0],
+          //   table: {
+          //     heights: [70, 10],
+          //     widths: [200, 200],
+          //     dontBreakRows: true,
+          //     body: [
+          //       ['', ''],
+          //       [
+          //         { text: owner.fullname.toUpperCase(), alignment: 'center' },
+          //         {
+          //           text: this.user?.fullname.toUpperCase() ?? '',
+          //           alignment: 'center',
+          //         },
+          //       ],
+          //     ],
+          //   },
+          //   ...(index < details.length - 1 && { pageBreak: 'after' }),
+          // },
           {
-            fontSize: 10,
-            margin: [70, 40, 80, 0],
-            table: {
-              heights: [70, 10],
-              widths: [200, 200],
-              dontBreakRows: true,
-              body: [
-                ['', ''],
-                [
-                  { text: owner.fullname.toUpperCase(), alignment: 'center' },
+            margin: [10, 80, 10, 0],
+            ...(index < details.length - 1 && { pageBreak: 'after' }),
+            columns: [
+              {
+                qr: `${qrData}/${pet.id}`,
+                fit: 75,
+              },
+              {
+                stack: [
                   {
-                    text: this.user?.fullname.toUpperCase() ?? '',
-                    alignment: 'center',
+                    fontSize: 10,
+                    alignment: 'right',
+                    text: `Fecha: ${new Date().toLocaleString()}`,
+                  },
+                  {
+                    fontSize: 10,
+                    alignment: 'right',
+                    text: `Generado por: ${
+                      this.user?.fullname.toUpperCase() ?? ''
+                    }`,
                   },
                 ],
-              ],
-            },
-            ...(index < details.length - 1 && { pageBreak: 'after' }),
+                width: '*',
+                margin: [0, 40, 0, 0],
+              },
+            ],
           },
         ]),
       ],

@@ -1,70 +1,9 @@
-<!-- <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #drawer
-    class="sidenav px-3"
-    fixedInViewport
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false"
-  >
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      @for (item of menu; track $index) {
-      <a
-        class="mb-2"
-        mat-list-item
-        [routerLink]="item.routerLink"
-        #link="routerLinkActive"
-        routerLinkActive
-        [activated]="link.isActive"
-      >
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span class="ml-2">{{ item.label }}</span>
-      </a>
-      }
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar>
-      @if (isHandset$ | async) {
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-      >
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      }
-      <span class="flex-1"></span>
-      <button
-        mat-icon-button
-        cdkOverlayOrigin
-        #trigger="cdkOverlayOrigin"
-        (click)="detailsOpen = !detailsOpen"
-      >
-        <mat-icon>account_circle</mat-icon>
-      </button>
-      <ng-template
-        cdkConnectedOverlay
-        [cdkConnectedOverlayOrigin]="trigger"
-        [cdkConnectedOverlayOpen]="detailsOpen"
-        (overlayOutsideClick)="detailsOpen = false"
-      >
-        <div class="mat-elevation-z8 w-full sm:w-[380px]">
-          <profile [(isOpen)]="detailsOpen" />
-        </div>
-      </ng-template>
-    </mat-toolbar>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container> -->
-
 <div class="example-container" [class.example-is-mobile]="isMobile()">
   <mat-toolbar class="example-toolbar">
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
+    <img src="images/app-icon.png" class="ml-4 size-8" alt="Icon app" />
     <span class="flex-1"></span>
     <button
       mat-icon-button
