@@ -1,18 +1,26 @@
 <div class="example-container" [class.example-is-mobile]="isMobile()">
   <mat-toolbar class="example-toolbar">
-    <button mat-icon-button (click)="snav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <img src="images/app-icon.png" class="ml-4 size-8" alt="Icon app" />
-    <span class="flex-1"></span>
-    <button
-      mat-icon-button
-      cdkOverlayOrigin
-      #trigger="cdkOverlayOrigin"
-      (click)="isProfileOpen = !isProfileOpen"
-    >
-      <mat-icon>account_circle</mat-icon>
-    </button>
+    <div class="flex items-center justify-between w-full">
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="hidden sm:block">
+        <img
+          src="images/logos/rum.png"
+          class="h-16"
+          alt="Institution logo"
+        />
+      </div>
+      <button
+        mat-icon-button
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+        (click)="isProfileOpen = !isProfileOpen"
+      >
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </div>
+
   </mat-toolbar>
 
   <ng-template
