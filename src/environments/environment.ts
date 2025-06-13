@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   apiUrl: 'api',
-  queryUrl: 'http://localhost:4201/verify',
+  queryUrl: 'https://zoonosis.sacaba.gob.bo/verify',
 };
