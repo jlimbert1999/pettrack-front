@@ -1,6 +1,5 @@
 export * from "./components/image-uploader/image-uploader.component"
 export * from "./components/inputs/search-input/search-input.component"
-export * from "./components/image-loader/image-loader.component"
 export * from "./components/inputs/simple-select-search/simple-select-search.component"
 export * from "./components/loaders/loading-indicator/loading-indicator.component"
 export * from "./services/file.service"

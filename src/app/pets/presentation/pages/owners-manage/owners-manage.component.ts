@@ -56,11 +56,10 @@ export default class OwnersManageComponent implements OnInit {
 
   readonly displayedColumns = [
     'name',
+    'dni',
     'address',
     'district',
-    'dni',
     'phone',
-    'pets',
     'options',
   ];
 
@@ -70,8 +69,9 @@ export default class OwnersManageComponent implements OnInit {
 
   create(): void {
     const dialogRef = this.dialogRef.open(OwnerDialogComponent, {
-      width: '1100px',
-      maxWidth: '1100px',
+      width: '1200px',
+      maxWidth: '1200px',
+      disableClose: true,
     });
     dialogRef.afterClosed().subscribe((result?: datasource) => {
       if (!result) return;
@@ -88,9 +88,10 @@ export default class OwnersManageComponent implements OnInit {
 
   update(element: datasource) {
     const dialogRef = this.dialogRef.open(OwnerDialogComponent, {
-      width: '1100px',
-      maxWidth: '1100px',
+      width: '1200px',
+      maxWidth: '1200px',
       data: element,
+      disableClose: true,
     });
     dialogRef.afterClosed().subscribe((result: datasource) => {
       if (!result) return;

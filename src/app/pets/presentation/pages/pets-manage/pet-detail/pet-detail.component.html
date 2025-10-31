@@ -5,8 +5,9 @@
       <div class="p-2">
         <div class="group relative block overflow-hidden">
           <div class="h-52 sm:h-56 w-full mb-6">
+            
             <img
-              [src]="data.image"
+              [src]="data.image ?? 'images/no-image.jpg'"
               alt="Pet image"
               class="w-full h-full object-contain"
             />

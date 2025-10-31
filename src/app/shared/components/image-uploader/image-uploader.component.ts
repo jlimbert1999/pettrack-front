@@ -14,70 +14,51 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Platform, PlatformModule } from '@angular/cdk/platform';
+
 import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'image-uploader',
   imports: [MatIconModule, MatButtonModule, MatTooltipModule, PlatformModule],
   template: `
-    <div class="flex flex-col">
+    <div class="flex flex-col ">
       @if(url()){
-      <figure class="flex justify-center items-center rounded-2xl px-4">
+      <figure class="flex justify-center items-center rounded-2xl">
         <img
           [src]="url()"
           alt="Image preview"
-          class="object-contain max-h-96 rounded-2xl"
+          class="object-contain max-h-[300px] rounded-2xl"
         />
       </figure>
       }
-      <div class="flex items-center justify-center">
-        <div class="text-lg mr-4">Imagen</div>
+      <div class="flex items-center justify-center py-2">
+        <div class="text-lg mr-4">imagen</div>
         <div class="flex gap-x-2">
-          @if(enablePhoto){
+          <input
+            #imageInput
+            hidden
+            type="file"
+            accept="image/*"
+            capture="environment"
+            (change)="select($event)"
+          />
           <button
             mat-icon-button
-            aria-label="Select photo"
-            (click)="photoInput.click()"
-            matTooltip="Seleccionar foto"
+            (click)="imageInput.click()"
+            matTooltip="Tomar o seleccionar imagen"
           >
             <mat-icon>photo_camera</mat-icon>
           </button>
-          <input
-            #photoInput
-            [hidden]="true"
-            type="file"
-            [multiple]="false"
-            accept="image/png, image/jpeg, image/jpg"
-            (change)="select($event)"
-            capture="camera"
-          />
-          }
 
-          <button
-            mat-icon-button
-            aria-label="Select image"
-            (click)="imageInput.click()"
-            matTooltip="Seleccionar imagen"
-          >
-            <mat-icon>image_search</mat-icon>
-          </button>
-          <input
-            #imageInput
-            [hidden]="true"
-            type="file"
-            [multiple]="false"
-            accept="image/png, image/jpeg, image/jpg"
-            (change)="select($event)"
-          />
           @if(url()){
-          <button
-            mat-icon-button
-            aria-label="Remove image"
-            matTooltip="Remover imagen"
-            (click)="remove()"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
+            <button
+              mat-icon-button
+              aria-label="Remove image"
+              matTooltip="Remover imagen"
+              (click)="remove()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           }
         </div>
       </div>

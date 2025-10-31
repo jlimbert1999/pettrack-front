@@ -13,7 +13,6 @@
   z-index: 2;
 }
 
-
 .example-sidenav-container {
   flex: 1;
 }
@@ -24,4 +23,10 @@
 
 .left-menu {
   background: var(--mat-sys-surface-container-low);
+}
+
+.loading-bar {
+  position: fixed;
+  top: 50px;
+  z-index: 2;
 }

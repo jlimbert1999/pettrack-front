@@ -1,17 +1,16 @@
 @use "@angular/material" as mat;
-@use 'ngx-toastr/toastr';
+@use "ngx-toastr/toastr";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import 'animate.css';
-
-.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
-  .mdc-notched-outline__notch {
-  border-right-style: hidden;
-}
+@import "animate.css";
 
 mat-form-field {
   width: 100%;
+}
+
+.mdc-notched-outline__notch {
+  border-right: none;
 }
 
 html {
@@ -29,23 +28,11 @@ html {
     color: var(--mat-sys-on-surface);
     box-shadow: var(--mat-sys-level2);
   }
-
-
 }
 
 @media screen and (max-width: 960px) {
-  .mat-elevation-z8 {
-    background: transparent;
-    box-shadow: none;
-  }
-
   .mat-mdc-header-row {
     display: none;
-  }
-
-  tbody {
-    display: block;
-    width: 100%;
   }
 
   .mat-mdc-table {
@@ -62,7 +49,6 @@ html {
       clear: both;
       box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
         0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
-      // background-color: #fff;
       border-radius: 3px;
 
       + .mat-mdc-row {
@@ -93,7 +79,6 @@ html {
 
       &.m-card-sub-title {
         font-size: 18px;
-        // margin-top: -8px;
         padding: 0 48px 0 16px;
       }
     }
