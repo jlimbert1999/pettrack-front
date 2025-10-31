@@ -5,7 +5,6 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 
 import { AlertService } from '../../shared';
@@ -15,7 +14,6 @@ export function loggingInterceptor(
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
   const alertService = inject(AlertService);
-  const router = inject(Router);
 
   const reqWithHeader = req.clone({
     headers: req.headers.append(

@@ -92,13 +92,15 @@
             <div class="border-2 border-gray-300 rounded-xl px-2 sm:px-4">
               <div class="flex items-center justify-between p-2">
                 <span class="text-lg"> Mascota {{ i + 1 }} </span>
-                <button
-                  mat-icon-button
-                  aria-label="Remove pet"
-                  (click)="removePet(i)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
+                @if(!data){
+                  <button
+                    mat-icon-button
+                    aria-label="Remove pet"
+                    (click)="removePet(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                }
               </div>
               <div class="flex flex-col sm:flex-row items-center gap-4">
                 <div class="w-full sm:w-2/5">

@@ -5,6 +5,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { Platform } from '@angular/cdk/platform';
 
 import { AuthService } from '../../auth/presentation/services/auth.service';
 import { treatment } from '../../pets/infrastructure';
@@ -22,6 +23,7 @@ interface petDetailProps {
 export class PdfService {
   private fileService = inject(FileService);
   private user = inject(AuthService).user();
+  private platform = inject(Platform);
 
   async generatePetSheet(owner: Owner, details: petDetailProps[]) {
     const backgroundImage = await this._getFileAsBase64(
@@ -36,6 +38,9 @@ export class PdfService {
     );
     const qrData = `${environment.queryUrl}`;
     const docDefinition: TDocumentDefinitions = {
+      info: {
+        title: 'MyCustomFilename', // This will be used as the document title
+      },
       header: {
         margin: [20, 20, 20, 40],
         columns: [
@@ -271,7 +276,18 @@ export class PdfService {
         ]),
       ],
     };
-    pdfMake.createPdf(docDefinition).print();
+
+    if (this.platform.ANDROID || this.platform.IOS) {
+      pdfMake
+        .createPdf(docDefinition)
+        .download(
+          `${owner.fullname.toUpperCase()} - ${
+            owner.dni
+          } (Hoja de registro RUM).pdf`
+        ); // más seguro en móvil
+    } else {
+      pdfMake.createPdf(docDefinition).print(); // en escritorio
+    }
   }
 
   private async _getFileAsBase64(url: string): Promise<string> {
