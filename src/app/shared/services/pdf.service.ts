@@ -38,9 +38,6 @@ export class PdfService {
     );
     const qrData = `${environment.queryUrl}`;
     const docDefinition: TDocumentDefinitions = {
-      info: {
-        title: 'MyCustomFilename', // This will be used as the document title
-      },
       header: {
         margin: [20, 20, 20, 40],
         columns: [
@@ -67,13 +64,6 @@ export class PdfService {
           },
         ],
       },
-      // footer: {
-      //   alignment: 'right',
-      //   fontSize: 10,
-      //   marginRight: 20,
-      //   text: `Generado el ${new Date().toLocaleString()}`,
-      // },
-
       background: function () {
         return {
           image: backgroundImage,
@@ -225,26 +215,6 @@ export class PdfService {
             },
             layout: 'lightHorizontalLines',
           },
-          // {
-          //   fontSize: 10,
-          //   margin: [70, 40, 80, 0],
-          //   table: {
-          //     heights: [70, 10],
-          //     widths: [200, 200],
-          //     dontBreakRows: true,
-          //     body: [
-          //       ['', ''],
-          //       [
-          //         { text: owner.fullname.toUpperCase(), alignment: 'center' },
-          //         {
-          //           text: this.user?.fullname.toUpperCase() ?? '',
-          //           alignment: 'center',
-          //         },
-          //       ],
-          //     ],
-          //   },
-          //   ...(index < details.length - 1 && { pageBreak: 'after' }),
-          // },
           {
             margin: [10, 80, 10, 0],
             ...(index < details.length - 1 && { pageBreak: 'after' }),
