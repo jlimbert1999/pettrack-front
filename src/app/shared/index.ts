@@ -5,3 +5,4 @@ export * from "./components/loaders/loading-indicator/loading-indicator.componen
 export * from "./services/file.service"
 export * from "./services/pdf.service"
 export * from "./services/alert.service"
+export * from "./pipes/form-error-messages.pipe"

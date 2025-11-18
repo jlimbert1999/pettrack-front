@@ -35,20 +35,29 @@ import { FileService } from '../../services/file.service';
         <div class="text-lg mr-4">imagen</div>
         <div class="flex gap-x-2">
           <input
-            #imageInput
+            #cameraInput
             hidden
             type="file"
             accept="image/*"
             capture="environment"
             (change)="select($event)"
           />
-          <button
-            mat-icon-button
-            (click)="imageInput.click()"
-            matTooltip="Tomar o seleccionar imagen"
-          >
+
+          <input
+            #galleryInput
+            hidden
+            type="file"
+            accept="image/*"
+            (change)="select($event)"
+          />
+          <button mat-icon-button (click)="cameraInput.click()" matTooltip="Tomar foto">
             <mat-icon>photo_camera</mat-icon>
           </button>
+
+          <button mat-icon-button (click)="galleryInput.click()" matTooltip="Seleccionar de la galería">
+            <mat-icon>photo_library</mat-icon>
+          </button>
+          
 
           @if(url()){
             <button
@@ -67,7 +76,7 @@ import { FileService } from '../../services/file.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageUploaderComponent implements OnInit {
-  platform = inject(Platform);
+  private platform = inject(Platform);
   private postService = inject(FileService);
   imageInput = viewChild.required<ElementRef<HTMLInputElement>>('imageInput');
 

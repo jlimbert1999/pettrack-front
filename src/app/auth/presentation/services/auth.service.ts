@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { iwtPayload, menu } from '../../infrastructure';
@@ -63,6 +63,13 @@ export class AuthService {
           return of(false);
         })
       );
+  }
+
+  updateCredentials(password: string) {
+    return this.http.patch(
+      `${this.base_url}/auth/credentials/${this.user()?.userId}`,
+      { password }
+    );
   }
 
   private _setAuthentication(token: string): boolean {

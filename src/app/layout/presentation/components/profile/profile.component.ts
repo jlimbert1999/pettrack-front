@@ -11,10 +11,10 @@ import { MatListModule } from '@angular/material/list';
 import { AuthService } from '../../../../auth/presentation/services/auth.service';
 
 @Component({
-    selector: 'profile',
-    imports: [CommonModule, RouterModule, MatListModule, MatIconModule],
-    templateUrl: './profile.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'profile',
+  imports: [CommonModule, RouterModule, MatListModule, MatIconModule],
+  templateUrl: './profile.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
   private authService = inject(AuthService);
@@ -25,6 +25,11 @@ export class ProfileComponent {
     this.authService.logout();
     this.isOpen.set(false);
     this.router.navigateByUrl('/login');
+  }
+
+  settings() {
+    this.router.navigateByUrl('/home/settings');
+    this.isOpen.set(false);
   }
 
   get user() {

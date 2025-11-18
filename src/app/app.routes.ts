@@ -21,6 +21,11 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'owners' },
       {
+        title: 'Configuraciones',
+        path: 'settings',
+        loadComponent: () => import('./layout/presentation/pages/user-settings/user-settings'),
+      },
+      {
         title: 'Propietarios',
         path: 'owners',
         loadComponent: () =>
