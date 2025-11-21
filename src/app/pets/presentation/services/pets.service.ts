@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
@@ -28,11 +29,15 @@ interface cache {
   providedIn: 'root',
 })
 export class PetsService {
+  private http = inject(HttpClient);
+
   private readonly url = `${environment.apiUrl}/pets`;
+
   cache = signal<cache | null>(null);
+
   keepAlive = signal(false);
 
-  constructor(private http: HttpClient) {}
+  breeds = toSignal(this.getBreeds(), { initialValue: [] });
 
   findAll({ limit, offset, term, formFilter }: findProps) {
     const filteredProps = Object.fromEntries(
@@ -57,13 +62,6 @@ export class PetsService {
       .pipe(map((resp) => PetMapper.fromResponse(resp)));
   }
 
-  getBreeds(species?: string) {
-    const params = new HttpParams({
-      fromObject: { ...(species && { species }) },
-    });
-    return this.http.get<breed[]>(`${this.url}/types/breeds`, { params });
-  }
-
   createCaptureLog(id: string, form: Object) {
     return this.http.post<captureLog>(`${this.url}/capture/${id}`, form);
   }
@@ -75,5 +73,13 @@ export class PetsService {
 
   removeCaptureLog(id: number) {
     return this.http.delete<{ message: string }>(`${this.url}/capture/${id}`);
+  }
+
+  private getBreeds() {
+    return this.http
+      .get<breed[]>(`${this.url}/types/breeds`)
+      .pipe(
+        map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
+      );
   }
 }

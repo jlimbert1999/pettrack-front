@@ -1,19 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-import { LoadingIndicatorComponent } from '..';
+import { LoadingIndicatorComponent } from '../components/loaders/loading-indicator/loading-indicator.component';
 
-interface snacbarProps {
-  message: string;
-  duration?: number;
-}
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
   private dialogRef = inject(MatDialog);
-  private snackBarRef = inject(MatSnackBar);
 
   private loadingDialogRef?: MatDialogRef<LoadingIndicatorComponent, void>;
 
@@ -23,18 +17,18 @@ export class AlertService {
 
   constructor() {}
 
-  showSnackbar({ message, duration = 3000 }: snacbarProps): void {
-    this.snackBarRef.open(message, undefined, { duration });
-  }
-
-  showSaveLoader() {
+  showActionLoader(): void {
+    if (this.loadingDialogRef) return;
     this.loadingDialogRef = this.dialogRef.open(LoadingIndicatorComponent, {
       disableClose: true,
     });
   }
 
-  closeSaveLoader() {
-    this.loadingDialogRef?.close();
+  closeActionLoader(): void {
+    if (this.loadingDialogRef) {
+      this.loadingDialogRef.close();
+      this.loadingDialogRef = undefined;
+    }
   }
 
   showLoader() {

@@ -7,13 +7,14 @@ import {
 import { inject } from '@angular/core';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 
-import { AlertService } from '../../shared';
+import { AlertService, Toast } from '../../shared';
 
 export function loggingInterceptor(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
   const alertService = inject(AlertService);
+  const toast = inject(Toast);
 
   const reqWithHeader = req.clone({
     headers: req.headers.append(
@@ -21,40 +22,46 @@ export function loggingInterceptor(
       `Bearer ${localStorage.getItem('token') || ''}`
     ),
   });
-  const isWrite = ['POST', 'PATCH', 'PUT'].includes(reqWithHeader.method);
   const isRead = reqWithHeader.method === 'GET';
 
-  if (isWrite) {
-    alertService.showSaveLoader();
-  } else if (isRead) {
+  if (isRead) {
     alertService.showLoader();
   }
+  console.log("REQUEST", req.url);
 
   return next(reqWithHeader).pipe(
     catchError((error) => {
       if (error instanceof HttpErrorResponse) {
-        handleHttpErrors(error, alertService);
+        const message =
+          typeof error.error['message'] === 'string'
+            ? error.error['message']
+            : 'Se ha producido un error';
+        switch (error.status) {
+          case 500:
+            toast.show({
+              type: 'error',
+              title: 'Error',
+              description: 'Ha ocurrido un error en el servidor',
+            });
+            break;
+          case 400:
+            toast.show({
+              type: 'warning',
+              title: 'Solicitud incorrecta',
+              description: message,
+            });
+            break;
+          default:
+            toast.show({ title: message });
+            break;
+        }
       }
       return throwError(() => error);
     }),
     finalize(() => {
-      if (isWrite) {
-        alertService.closeSaveLoader();
-      } else if (isRead) {
+      if (isRead) {
         alertService.closeLoader();
       }
     })
   );
-}
-
-function handleHttpErrors(error: HttpErrorResponse, service: AlertService) {
-  const message: string = error.error['message'] ?? 'Ha ocurrido un error';
-  switch (error.status) {
-    case 500:
-      service.showSnackbar({ message: 'Ha ocurrido un error en el servidor' });
-      break;
-    default:
-      service.showSnackbar({ message: message });
-      break;
-  }
 }

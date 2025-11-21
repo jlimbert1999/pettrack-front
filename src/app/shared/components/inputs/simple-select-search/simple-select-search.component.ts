@@ -40,6 +40,7 @@ export type SimpleSelectOption<T> = {
         [formControl]="bankCtrl"
         [placeholder]="placeholder()"
         (selectionChange)="selectOption($event.value)"
+        [required]="isRequired()"
       >
         <mat-option>
           <ngx-mat-select-search
@@ -58,6 +59,9 @@ export type SimpleSelectOption<T> = {
           {{ bank.text }}
         </mat-option>
       </mat-select>
+      @if(isRequired() && bankCtrl.invalid){
+      <mat-error>Seleccione una opcion</mat-error>
+      }
     </mat-form-field>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

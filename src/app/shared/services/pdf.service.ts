@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { lastValueFrom } from 'rxjs';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import { Platform } from '@angular/cdk/platform';
 
 import { AuthService } from '../../auth/presentation/services/auth.service';
-import { treatment } from '../../pets/infrastructure';
-import { Owner, Pet } from '../../pets/domain';
-import { FileService } from './file.service';
 import { environment } from '../../../environments/environment';
+import { treatment } from '../../pets/infrastructure';
+import type { Owner, Pet } from '../../pets/domain';
+import { FileService } from './file.service';
 
 interface petDetailProps {
   pet: Pet;
@@ -26,11 +26,8 @@ export class PdfService {
   private platform = inject(Platform);
 
   async generatePetSheet(owner: Owner, details: petDetailProps[]) {
-    const backgroundImage = await this._getFileAsBase64(
-      '/images/banner-2.jpeg'
-    );
-    const headerImage = await this._getFileAsBase64('/images/institution.jpeg');
-    const sloganImage = await this._getFileAsBase64('/images/slogan.png');
+    const headerImage = await this._getFileAsBase64('/images/logos/gams.png');
+    const sloganImage = await this._getFileAsBase64('/images/logos/rum.png');
     const petImages = await Promise.all(
       details.map(({ pet }) =>
         pet.image ? this._getFileAsBase64(pet.image) : null
@@ -59,14 +56,14 @@ export class PdfService {
             ],
           },
           {
-            image: sloganImage,
+            image: 'slogan',
             width: 120,
           },
         ],
       },
       background: function () {
         return {
-          image: backgroundImage,
+          image: 'slogan',
           alignment: 'center',
           opacity: 0.2,
           width: 400,
@@ -126,7 +123,11 @@ export class PdfService {
                 stack: [
                   {
                     ...(petImages[index]
-                      ? { width: 200, height: 200, image: petImages[index] }
+                      ? {
+                          image: petImages[index],
+                          fit: [200, 200],
+                          alignment: 'center',
+                        }
                       : {
                           width: 200,
                           height: 200,
@@ -245,6 +246,9 @@ export class PdfService {
           },
         ]),
       ],
+      images: {
+        slogan: sloganImage,
+      },
     };
 
     if (this.platform.ANDROID || this.platform.IOS) {
@@ -254,7 +258,7 @@ export class PdfService {
           `${owner.fullname.toUpperCase()} - ${
             owner.dni
           } (Hoja de registro RUM).pdf`
-        ); // más seguro en móvil
+        );
     } else {
       pdfMake.createPdf(docDefinition).print(); // en escritorio
     }

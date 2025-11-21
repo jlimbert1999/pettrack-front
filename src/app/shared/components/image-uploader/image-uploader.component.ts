@@ -27,7 +27,7 @@ import { FileService } from '../../services/file.service';
         <img
           [src]="url()"
           alt="Image preview"
-          class="object-contain max-h-[300px] rounded-2xl"
+          class="object-contain max-h-[250px] rounded-2xl"
         />
       </figure>
       }
@@ -78,7 +78,8 @@ import { FileService } from '../../services/file.service';
 export class ImageUploaderComponent implements OnInit {
   private platform = inject(Platform);
   private postService = inject(FileService);
-  imageInput = viewChild.required<ElementRef<HTMLInputElement>>('imageInput');
+  cameraInput = viewChild.required<ElementRef<HTMLInputElement>>('cameraInput');
+  galleryInput = viewChild.required<ElementRef<HTMLInputElement>>('galleryInput');
 
   preview = input<string | null | undefined>(null);
   onImageRemoved = output<void>();
@@ -106,7 +107,8 @@ export class ImageUploaderComponent implements OnInit {
   remove(): void {
     this.file.set(undefined);
     this.url.set(null);
-    this.imageInput().nativeElement.value = '';
+    this.cameraInput().nativeElement.value = '';
+    this.galleryInput().nativeElement.value = '';
     this.onImageRemoved.emit();
   }
 

@@ -3,7 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "animate.css";
+
+@import "tailwindcss";
 
 mat-form-field {
   width: 100%;
@@ -120,5 +121,33 @@ html {
 
   .mat-mdc-paginator {
     margin-top: 24px;
+  }
+}
+
+@layer utilities {
+  @keyframes fade-down {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-down {
+    animation: fade-down 320ms ease-out both;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 400ms ease-out both;
   }
 }

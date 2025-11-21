@@ -36,7 +36,7 @@ export class AuthService {
         login,
         password,
       })
-      .pipe(map(({ token }) => this._setAuthentication(token)));
+      .pipe(map(({ token }) => this.setAuthentication(token)));
   }
 
   logout() {
@@ -57,7 +57,7 @@ export class AuthService {
       }>(`${this.base_url}/auth`)
       .pipe(
         tap(({ menu }) => this._menu.set(menu)),
-        map(({ token }) => this._setAuthentication(token)),
+        map(({ token }) => this.setAuthentication(token)),
         catchError(() => {
           this.logout();
           return of(false);
@@ -72,7 +72,7 @@ export class AuthService {
     );
   }
 
-  private _setAuthentication(token: string): boolean {
+  private setAuthentication(token: string): boolean {
     this._user.set(jwtDecode(token));
     localStorage.setItem('token', token);
     return true;

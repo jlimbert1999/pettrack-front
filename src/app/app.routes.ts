@@ -9,15 +9,13 @@ export const routes: Routes = [
     path: 'login',
     title: 'Autentificacion',
     canActivate: [isNotAuthenticatedGuard],
-    loadComponent: () =>
-      import('./auth/presentation/pages/login/login.component'),
+    loadComponent: () => import('./auth/presentation/pages/login/login.component'),
   },
   {
     title: 'Inicio',
     path: 'home',
     canActivate: [isAuthenticatedGuard],
-    loadComponent: () =>
-      import('./layout/presentation/pages/home/home.component'),
+    loadComponent: () => import('./layout/presentation/pages/home/home.component'),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'owners' },
       {

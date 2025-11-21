@@ -9,9 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     <mat-dialog-content>
       <div class="flex items-center gap-x-6">
         <div>
-          <mat-spinner [diameter]="60"/>
+          <mat-spinner [diameter]="60" />
         </div>
-        <div class="font-medium">Guardando...</div>
+        <div class="font-medium text-lg">Guardando...</div>
       </div>
     </mat-dialog-content>
   `,

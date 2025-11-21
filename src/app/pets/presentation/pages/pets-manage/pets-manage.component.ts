@@ -70,7 +70,7 @@ export default class PetsManageComponent implements OnInit {
   offset = computed<number>(() => this.limit() * this.index());
   term = signal<string>('');
   isFilterOpen = false;
-  districts = toSignal(this.getDistricts(), { initialValue: [] });
+  districts = this.ownerService.districts
 
   formFilter: FormGroup = this.formBuilder.group({
     owner: [''],
@@ -144,11 +144,4 @@ export default class PetsManageComponent implements OnInit {
     this.getData();
   }
 
-  private getDistricts(): Observable<SimpleSelectOption<number>[]> {
-    return this.ownerService
-      .getDistricts()
-      .pipe(
-        map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
-      );
-  }
 }

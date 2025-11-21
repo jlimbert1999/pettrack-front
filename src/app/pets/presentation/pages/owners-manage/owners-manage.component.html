@@ -1,95 +1,100 @@
-<div class="animate__animated animate__fadeIn">
-  <div class="flex px-4 py-3 items-center">
-    <div class="text-2xl">Propietarios</div>
-    <div class="flex-1"></div>
-    <div>
-      <button mat-flat-button (click)="create()">
-        <mat-icon>add</mat-icon>
-        Agregar
-      </button>
-    </div>
+<div class="flex px-4 py-3 items-center">
+  <div class="text-2xl">Propietarios</div>
+  <div class="flex-1"></div>
+  <div>
+    <button mat-flat-button (click)="create()">
+      <mat-icon>add</mat-icon>
+      Agregar
+    </button>
   </div>
-  <div class="flex justify-end py-2">
-    <div class="w-full px-2 sm:w-1/4 h-11">
-      <search-input (onSearch)="search($event)" placeholder="Nombre / CI" />
-    </div>
+</div>
+<div class="flex justify-end py-2">
+  <div class="w-full px-2 sm:w-1/4 h-11">
+    <search-input (onSearch)="search($event)" placeholder="Nombre / CI" />
   </div>
-  <div class="p-3">
-    <div class="example-container  mat-elevation-z8">
-      <table mat-table [dataSource]="datasource()">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.owner.fullname | titlecase }}
-          </td>
-        </ng-container>
+</div>
+<div class="p-3">
+  <div>
+    <table mat-table [dataSource]="datasource()">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.owner.fullname | titlecase }}
+        </td>
+      </ng-container>
 
-        <ng-container matColumnDef="address">
-          <th mat-header-cell *matHeaderCellDef>Direccion</th>
-          <td mat-cell *matCellDef="let element" class="sm:max-w-[150px]">
-           
-              <p class="truncate"> {{ element.owner.address }}</p>
-          </td>
-        </ng-container>
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef>Direccion</th>
+        <td mat-cell *matCellDef="let element" class="sm:max-w-[150px]">
+          <p class="truncate">{{ element.owner.address }}</p>
+        </td>
+      </ng-container>
 
-        <ng-container matColumnDef="district">
-          <th mat-header-cell *matHeaderCellDef>Distrito</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.owner.district.name }}
-          </td>
-        </ng-container>
+      <ng-container matColumnDef="district">
+        <th mat-header-cell *matHeaderCellDef>Distrito</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.owner.district.name }}
+        </td>
+      </ng-container>
 
-        <ng-container matColumnDef="dni">
-          <th mat-header-cell *matHeaderCellDef>CI</th>
-          <td mat-cell *matCellDef="let element">{{ element.owner.dni }}</td>
-        </ng-container>
+      <ng-container matColumnDef="dni">
+        <th mat-header-cell *matHeaderCellDef>CI</th>
+        <td mat-cell *matCellDef="let element">{{ element.owner.dni }}</td>
+      </ng-container>
 
-        <ng-container matColumnDef="phone">
-          <th mat-header-cell *matHeaderCellDef>Telefono</th>
-          <td mat-cell *matCellDef="let element">{{ element.owner.phone }}</td>
-        </ng-container>
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Telefono</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.owner.phoneNumber }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="pets">
+        <th mat-header-cell *matHeaderCellDef>Mascotas</th>
+        <td mat-cell *matCellDef="let element" class="w-[80px]">
+          {{ element.pets.length }}
+        </td>
+      </ng-container>
 
-        <ng-container matColumnDef="options">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element" class="w-8">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="menu"
-              aria-label="Menu options"
-            >
-              <mat-icon>more_vert</mat-icon>
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" class="w-8">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Menu options"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="update(element)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
             </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="update(element)">
-                <mat-icon>edit</mat-icon>
-                <span>Editar</span>
-              </button>
-              <button mat-menu-item (click)="treatments(element)">
-                <mat-icon>vaccines</mat-icon>
-                <span>Tratamientops</span>
-              </button>
-              <button mat-menu-item (click)="generatePetSheet(element)">
-                <mat-icon>print</mat-icon>
-                <span>Hoja de registro</span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
+            <button mat-menu-item (click)="treatments(element)">
+              <mat-icon>vaccines</mat-icon>
+              <span>Tratamientops</span>
+            </button>
+            <button mat-menu-item (click)="generatePetSheet(element)">
+              <mat-icon>print</mat-icon>
+              <span>Hoja de registro</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell p-3" colspan="7">No se encontraron resultados</td>
-        </tr>
-      </table>
-      <mat-paginator
-        aria-label="Select page of users search results"
-        showFirstLastButtons
-        [length]="datasize()"
-        [pageIndex]="index()"
-        [pageSize]="10"
-        (page)="onPageChange($event)"
-      />
-    </div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell p-3" colspan="7">No se encontraron resultados</td>
+      </tr>
+    </table>
+    <mat-paginator
+      aria-label="Select page of users search results"
+      showFirstLastButtons
+      [length]="datasize()"
+      [pageIndex]="index()"
+      [pageSize]="10"
+      (page)="onPageChange($event)"
+    />
   </div>
 </div>

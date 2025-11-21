@@ -18,12 +18,11 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     MatCheckboxModule,
+    MatFormFieldModule,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,9 +40,7 @@ export default class LoginComponent {
   });
 
   ngOnInit(): void {
-    const loginSaved = localStorage.getItem('login');
-    if (!loginSaved) return;
-    this.loginForm.patchValue({ login: loginSaved, remember: true });
+    this.getSavedLogin()
   }
 
   login() {
@@ -51,5 +48,11 @@ export default class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe(() => {
       this.router.navigateByUrl('/home');
     });
+  }
+
+  private getSavedLogin() {
+    const loginSaved = localStorage.getItem('login');
+    if (!loginSaved) return;
+    this.loginForm.patchValue({ login: loginSaved, remember: true });
   }
 }

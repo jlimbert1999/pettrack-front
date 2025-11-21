@@ -60,6 +60,7 @@ export default class OwnersManageComponent implements OnInit {
     'address',
     'district',
     'phone',
+    "pets",
     'options',
   ];
 

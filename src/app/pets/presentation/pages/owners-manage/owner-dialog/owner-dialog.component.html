@@ -1,47 +1,84 @@
 <h2 mat-dialog-title>{{ data ? "Editar" : "Crear" }} Propietario</h2>
 <mat-dialog-content>
-  <form [formGroup]="form">
-    <mat-stepper formArrayName="steps">
-      <mat-step
-        formGroupName="0"
-        [stepControl]="ownerFormGroup"
-        label="Datos propietario"
-      >
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-x-3 gap-y-1 pt-2">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <mat-stepper>
+      <mat-step [stepControl]="ownerControl" label="Datos propietario">
+        <div
+          formGroupName="person"
+          class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-2"
+        >
           <div class="sm:col-span-2">
             <mat-form-field>
               <mat-label>Nombre</mat-label>
               <input matInput formControlName="first_name" />
+              <mat-error>
+                {{ formUtils.getErrorMessage(ownerControl, "first_name") }}
+              </mat-error>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>Paterno</mat-label>
               <input matInput formControlName="middle_name" />
+              <mat-error>
+                {{
+                  ownerControl.get("middle_name")?.errors
+                    | formErrorMessages : ERROR_MESSAGES["middle_name"]
+                }}
+              </mat-error>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>Materno</mat-label>
               <input matInput formControlName="last_name" />
+              @if (ownerControl.get('last_name')?.invalid) {
+              <mat-error>
+                {{
+                  ownerControl.get("last_name")?.errors
+                    | formErrorMessages : ERROR_MESSAGES["last_name"]
+                }}
+              </mat-error>
+              }
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>CI</mat-label>
               <input matInput formControlName="dni" />
+              @if (ownerControl.get('dni')?.invalid) {
+              <mat-error>
+                {{
+                  ownerControl.get("dni")?.errors
+                    | formErrorMessages : ERROR_MESSAGES["dni"]
+                }}
+              </mat-error>
+              }
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>Telefono</mat-label>
               <input matInput formControlName="phone" />
+              @if (ownerControl.get('phone')?.invalid) {
+              <mat-error>
+                {{
+                  ownerControl.get("phone")?.errors
+                    | formErrorMessages : ERROR_MESSAGES["phone"]
+                }}
+              </mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="sm:col-span-2">
             <mat-form-field>
               <mat-label>Direccion</mat-label>
               <input matInput formControlName="address" />
+              @if (ownerControl.get('address')?.invalid) {
+              <mat-error>
+                {{ ownerControl.get("address")?.errors | formErrorMessages }}
+              </mat-error>
+              }
             </mat-form-field>
           </div>
           <div>
@@ -57,15 +94,20 @@
                 [for]="pickerBirth"
               ></mat-datepicker-toggle>
               <mat-datepicker #pickerBirth></mat-datepicker>
+              @if (ownerControl.get('birthDate')?.invalid) {
+              <mat-error>
+                {{ ownerControl.get("birthDate")?.errors | formErrorMessages }}
+              </mat-error>
+              }
             </mat-form-field>
           </div>
-          <div>
+          <div class="sm:col-span-2">
             <simple-select-search
               label="Distrito"
               placeholder="Seleccione un distrito"
-              [value]="ownerFormGroup.get('districtId')?.value"
+              [value]="ownerControl.get('districtId')?.value"
               [elements]="districts()"
-              (onSelect)="ownerFormGroup.get('districtId')?.setValue($event)"
+              (onSelect)="ownerControl.get('districtId')?.setValue($event)"
             />
           </div>
         </div>
@@ -73,13 +115,9 @@
           <button mat-button matStepperNext type="button">Siguiente</button>
         </div>
       </mat-step>
-      <mat-step
-        formGroupName="1"
-        [stepControl]="petsFormArray"
-        label="Datos mascotas"
-      >
-        <div class="flex items-center p-3">
-          <div class="text-lg">Mascotas</div>
+      <mat-step [stepControl]="petsControl" label="Datos mascotas">
+        <div class="flex items-center p-2">
+          <div class="text-lg font-medium">Mascotas</div>
           <div class="flex-1"></div>
           <div>
             <button mat-mini-fab aria-label="Add pet button" (click)="addPet()">
@@ -87,19 +125,25 @@
             </button>
           </div>
         </div>
-        <div class="flex flex-col gap-y-4 overflow-y-auto max-h-96">
-          <div *ngFor="let control of petsFormArray.controls; let i = index">
+        <div
+          formArrayName="pets"
+          class="flex flex-col gap-y-4 overflow-y-auto max-h-[400px]"
+        >
+          <div
+            *ngFor="let control of pets.controls; let i = index"
+            [formGroupName]="i"
+          >
             <div class="border-2 border-gray-300 rounded-xl px-2 sm:px-4">
               <div class="flex items-center justify-between p-2">
                 <span class="text-lg"> Mascota {{ i + 1 }} </span>
                 @if(!data){
-                  <button
-                    mat-icon-button
-                    aria-label="Remove pet"
-                    (click)="removePet(i)"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
+                <button
+                  mat-icon-button
+                  aria-label="Remove pet"
+                  (click)="removePet(i)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
                 }
               </div>
               <div class="flex flex-col sm:flex-row items-center gap-4">
@@ -111,14 +155,16 @@
                   />
                 </div>
                 <div class="w-full sm:w-3/5">
-                  <div
-                    class="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-1"
-                    [formGroupName]="i"
-                  >
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-3 gap-y-4">
                     <div class="sm:col-span-2">
                       <mat-form-field>
                         <mat-label>Nombre</mat-label>
                         <input matInput formControlName="name" />
+                        @if (formUtils.isValidField(form, 'pets.' + i +'.name')) {
+                          <mat-error>
+                            {{ formUtils.getErrorMessage(form, "pets." + i + ".name") }}
+                          </mat-error>
+                        }
                       </mat-form-field>
                     </div>
                     <div>
@@ -140,11 +186,9 @@
                       <simple-select-search
                         placeholder="Seleccione una raza"
                         label="Raza"
-                        [value]="petsFormArray.at(i).get('breedId')?.value"
+                        [value]="pets.at(i).get('breedId')?.value"
                         [elements]="breeds()!"
-                        (onSelect)="
-                          petsFormArray.at(i).get('breedId')?.setValue($event)
-                        "
+                        (onSelect)="pets.at(i).get('breedId')?.setValue($event)"
                       />
                     </div>
                     <div>
@@ -200,6 +244,11 @@
             </div>
           </div>
         </div>
+        @if(pets.length === 0){
+        <div class="flex justify-start p-2">
+          <span>No hay mascotas agregadas</span>
+        </div>
+        }
         <div class="flex justify-end py-3">
           <button mat-button matStepperPrevious type="button">Atras</button>
         </div>
@@ -209,7 +258,11 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-flat-button (click)="save()" [disabled]="form.invalid">
+  <button
+    mat-flat-button
+    (click)="save()"
+    [disabled]="form.invalid || isLoading()"
+  >
     Guardar
   </button>
 </mat-dialog-actions>

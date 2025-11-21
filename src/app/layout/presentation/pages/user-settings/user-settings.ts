@@ -23,7 +23,7 @@ import {
   FormErrorMessagesPipe,
   FieldValidationErrorMessages,
 } from '../../../../shared/pipes/form-error-messages.pipe';
-import { AlertService } from '../../../../shared';
+import { AlertService, Toast } from '../../../../shared';
 
 @Component({
   selector: 'app-user-settings',
@@ -43,7 +43,7 @@ export default class UserSettings {
   private formBuilder = inject(FormBuilder);
   private location = inject(Location);
   private authService = inject(AuthService);
-  private alertService = inject(AlertService);
+  private toast = inject(Toast);
 
   user = this.authService.user;
 
@@ -85,8 +85,10 @@ export default class UserSettings {
       this.hidePassword.set(true);
       this.hideConfirmPassword.set(true);
       this.formUser.reset({});
-      this.alertService.showSnackbar({
-        message: '✅ Contraseña actualizada correctamente',
+      this.toast.show({
+        type: 'success',
+        title: 'Cambios guardados',
+        description: 'Contraseña actualizada correctamente',
       });
     });
   }
