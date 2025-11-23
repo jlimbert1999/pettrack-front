@@ -34,7 +34,6 @@ import { finalize } from 'rxjs';
 
 import {
   AlertService,
-  FormErrorMessagesPipe,
   ImageUploaderComponent,
   SimpleSelectSearchComponent,
 } from '../../../../../shared';
@@ -42,7 +41,6 @@ import {
 import { CustomFormValidators, FormUtils } from '../../../../../../helpers';
 import { OwnersService, PetsService } from '../../../services/';
 import { Owner, Pet } from '../../../../domain';
-import { FormError } from '../../../../../shared/components/form-error/form-error';
 
 interface PetProps {
   id?: string;
@@ -65,9 +63,7 @@ interface PetProps {
     MatIconModule,
     MatStepperModule,
     ImageUploaderComponent,
-    SimpleSelectSearchComponent,
-    FormErrorMessagesPipe,
-    FormError
+    SimpleSelectSearchComponent
   ],
   templateUrl: './owner-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Default,
@@ -130,7 +126,7 @@ export class OwnerDialogComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(10),
+          Validators.maxLength(12),
           Validators.pattern(/^[A-Za-z0-9-]+$/),
         ],
       ],
@@ -204,33 +200,30 @@ export class OwnerDialogComponent implements OnInit {
   }
 
   addPet(): void {
-    this.pets.push(
-      this.formBuilder.group({
-        name: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/),
-          ],
-        ],
-        breedId: ['', Validators.required],
-        color: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern(/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/),
-          ],
-        ],
-        sex: ['', Validators.required],
-        is_neutered: [false],
-        birthDate: [null],
-        neuter_date: [null],
-        description: [null, Validators.maxLength(300)],
-      })
-    );
+    const group = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      breedId: ['', Validators.required],
+      color: ['', Validators.required],
+      sex: ['', Validators.required],
+      is_neutered: [false],
+      birthDate: [null],
+      neuter_date: [null],
+      description: [null],
+    });
+    this.pets.push(group);
     this.petsList.update((values) => [...values, { image: null }]);
+  }
+
+  get ownerControl() {
+    return this.form.get('person') as FormGroup;
+  }
+
+  get petsControl(): AbstractControl {
+    return this.form.get('pets')!;
+  }
+
+  get pets() {
+    return this.form.get('pets') as FormArray;
   }
 
   removePet(index: number): void {
@@ -254,18 +247,6 @@ export class OwnerDialogComponent implements OnInit {
       values[index].image = null;
       return [...values];
     });
-  }
-
-  get ownerControl() {
-    return this.form.get('person') as FormGroup;
-  }
-
-  get petsControl(): AbstractControl {
-    return this.form.get('pets')!;
-  }
-
-  get pets() {
-    return this.form.get('pets') as FormArray;
   }
 
   private loadForm(): void {

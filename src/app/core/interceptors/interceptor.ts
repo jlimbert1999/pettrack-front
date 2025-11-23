@@ -27,7 +27,6 @@ export function loggingInterceptor(
   if (isRead) {
     alertService.showLoader();
   }
-  console.log("REQUEST", req.url);
 
   return next(reqWithHeader).pipe(
     catchError((error) => {

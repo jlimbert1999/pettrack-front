@@ -29,7 +29,6 @@ export class FormUtils {
     const errors = control.errors;
 
     for (const key of Object.keys(errors)) {
-      // Mensaje personalizado (si existe)
       if (customMessages && customMessages[key]) {
         return customMessages[key];
       }

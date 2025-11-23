@@ -12,7 +12,7 @@
               <mat-label>Nombre</mat-label>
               <input matInput formControlName="first_name" />
               <mat-error>
-                {{ formUtils.getErrorMessage(ownerControl, "first_name") }}
+                {{ formUtils.getErrorMessage(ownerControl, "first_name", ERROR_MESSAGES["first_name"]) }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -21,10 +21,7 @@
               <mat-label>Paterno</mat-label>
               <input matInput formControlName="middle_name" />
               <mat-error>
-                {{
-                  ownerControl.get("middle_name")?.errors
-                    | formErrorMessages : ERROR_MESSAGES["middle_name"]
-                }}
+                {{ formUtils.getErrorMessage(ownerControl, "middle_name", ERROR_MESSAGES["middle_name"]) }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -32,53 +29,36 @@
             <mat-form-field>
               <mat-label>Materno</mat-label>
               <input matInput formControlName="last_name" />
-              @if (ownerControl.get('last_name')?.invalid) {
-              <mat-error>
-                {{
-                  ownerControl.get("last_name")?.errors
-                    | formErrorMessages : ERROR_MESSAGES["last_name"]
-                }}
+               <mat-error>
+                {{ formUtils.getErrorMessage(ownerControl, "last_name", ERROR_MESSAGES["last_name"]) }}
               </mat-error>
-              }
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>CI</mat-label>
               <input matInput formControlName="dni" />
-              @if (ownerControl.get('dni')?.invalid) {
               <mat-error>
-                {{
-                  ownerControl.get("dni")?.errors
-                    | formErrorMessages : ERROR_MESSAGES["dni"]
-                }}
+                {{ formUtils.getErrorMessage(ownerControl, "dni", ERROR_MESSAGES["dni"]) }}
               </mat-error>
-              }
             </mat-form-field>
           </div>
           <div>
             <mat-form-field>
               <mat-label>Telefono</mat-label>
               <input matInput formControlName="phone" />
-              @if (ownerControl.get('phone')?.invalid) {
-              <mat-error>
-                {{
-                  ownerControl.get("phone")?.errors
-                    | formErrorMessages : ERROR_MESSAGES["phone"]
-                }}
+               <mat-error>
+                {{ formUtils.getErrorMessage(ownerControl, "phone", ERROR_MESSAGES["phone"]) }}
               </mat-error>
-              }
             </mat-form-field>
           </div>
           <div class="sm:col-span-2">
             <mat-form-field>
               <mat-label>Direccion</mat-label>
               <input matInput formControlName="address" />
-              @if (ownerControl.get('address')?.invalid) {
               <mat-error>
-                {{ ownerControl.get("address")?.errors | formErrorMessages }}
+                {{ formUtils.getErrorMessage(ownerControl, "address") }}
               </mat-error>
-              }
             </mat-form-field>
           </div>
           <div>
@@ -94,11 +74,9 @@
                 [for]="pickerBirth"
               ></mat-datepicker-toggle>
               <mat-datepicker #pickerBirth></mat-datepicker>
-              @if (ownerControl.get('birthDate')?.invalid) {
               <mat-error>
-                {{ ownerControl.get("birthDate")?.errors | formErrorMessages }}
+                {{ formUtils.getErrorMessage(ownerControl, "birthDate") }}
               </mat-error>
-              }
             </mat-form-field>
           </div>
           <div class="sm:col-span-2">
@@ -120,30 +98,34 @@
           <div class="text-lg font-medium">Mascotas</div>
           <div class="flex-1"></div>
           <div>
-            <button mat-mini-fab aria-label="Add pet button" (click)="addPet()">
+            <button
+              mat-mini-fab
+              aria-label="Add pet button"
+              type="button"
+              (click)="addPet()"
+            >
               <mat-icon>add</mat-icon>
             </button>
           </div>
         </div>
         <div
           formArrayName="pets"
-          class="flex flex-col gap-y-4 overflow-y-auto max-h-[400px]"
+          class="flex flex-col gap-3 overflow-y-auto max-h-[400px]"
         >
-          <div
-            *ngFor="let control of pets.controls; let i = index"
-            [formGroupName]="i"
-          >
+          @for (control of pets.controls; track $index; let i = $index) {
+          <div [formGroupName]="i">
             <div class="border-2 border-gray-300 rounded-xl px-2 sm:px-4">
               <div class="flex items-center justify-between p-2">
                 <span class="text-lg"> Mascota {{ i + 1 }} </span>
-                @if(!data){
-                <button
-                  mat-icon-button
-                  aria-label="Remove pet"
-                  (click)="removePet(i)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
+                @if(!petsList()[i].id){
+                  <button
+                    mat-icon-button
+                    aria-label="Remove pet"
+                    type="button"
+                    (click)="removePet(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
                 }
               </div>
               <div class="flex flex-col sm:flex-row items-center gap-4">
@@ -160,11 +142,9 @@
                       <mat-form-field>
                         <mat-label>Nombre</mat-label>
                         <input matInput formControlName="name" />
-                        @if (formUtils.isValidField(form, 'pets.' + i +'.name')) {
-                          <mat-error>
-                            {{ formUtils.getErrorMessage(form, "pets." + i + ".name") }}
-                          </mat-error>
-                        }
+                        <mat-error>
+                          {{ formUtils.getErrorMessage(form, "pets." + i + ".name") }}
+                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div>
@@ -195,6 +175,9 @@
                       <mat-form-field>
                         <mat-label>Color</mat-label>
                         <input matInput formControlName="color" />
+                        <mat-error>
+                          {{ formUtils.getErrorMessage(form, "pets." + i + ".color") }}
+                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div>
@@ -207,9 +190,12 @@
                           </mat-option>
                           }
                         </mat-select>
+                        <mat-error>
+                          {{ formUtils.getErrorMessage(form, "pets." + i + ".sex") }}
+                        </mat-error>
                       </mat-form-field>
                     </div>
-                    <div>
+                    <div class="mb-2 sm:mb-0">
                       <mat-checkbox formControlName="is_neutered" #neutered>
                         Esterilizado
                       </mat-checkbox>
@@ -243,12 +229,14 @@
               </div>
             </div>
           </div>
+          }
+          @empty {
+            <div class="flex justify-start p-2">
+              <span>No hay mascotas agregadas</span>
+            </div>
+          }
         </div>
-        @if(pets.length === 0){
-        <div class="flex justify-start p-2">
-          <span>No hay mascotas agregadas</span>
-        </div>
-        }
+       
         <div class="flex justify-end py-3">
           <button mat-button matStepperPrevious type="button">Atras</button>
         </div>
@@ -257,7 +245,7 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close color="warn">Cancelar</button>
+  <button mat-button type="button" mat-dialog-close color="warn">Cancelar</button>
   <button
     mat-flat-button
     (click)="save()"

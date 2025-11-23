@@ -90,7 +90,6 @@ export class OwnersService {
           }))
         );
       }, CONCURRENCY),
-
       toArray()
     );
   }

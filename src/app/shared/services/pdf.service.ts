@@ -265,11 +265,12 @@ export class PdfService {
   }
 
   private async _getFileAsBase64(url: string): Promise<string> {
-    const blob = await lastValueFrom(this.fileService.getFile(url));
-    return new Promise<string>((resolve, reject) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
       reader.readAsDataURL(blob);
     });
   }

@@ -50,24 +50,34 @@ import { FileService } from '../../services/file.service';
             accept="image/*"
             (change)="select($event)"
           />
-          <button mat-icon-button (click)="cameraInput.click()" matTooltip="Tomar foto">
+          <button
+            mat-icon-button
+            type="button"
+            (click)="cameraInput.click()"
+            matTooltip="Tomar foto"
+          >
             <mat-icon>photo_camera</mat-icon>
           </button>
 
-          <button mat-icon-button (click)="galleryInput.click()" matTooltip="Seleccionar de la galería">
+          <button
+            mat-icon-button
+            type="button"
+            (click)="galleryInput.click()"
+            matTooltip="Seleccionar de la galería"
+          >
             <mat-icon>photo_library</mat-icon>
           </button>
-          
 
           @if(url()){
-            <button
-              mat-icon-button
-              aria-label="Remove image"
-              matTooltip="Remover imagen"
-              (click)="remove()"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+          <button
+            mat-icon-button
+            aria-label="Remove image"
+            matTooltip="Remover imagen"
+            type="button"
+            (click)="remove()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
           }
         </div>
       </div>
@@ -79,9 +89,11 @@ export class ImageUploaderComponent implements OnInit {
   private platform = inject(Platform);
   private postService = inject(FileService);
   cameraInput = viewChild.required<ElementRef<HTMLInputElement>>('cameraInput');
-  galleryInput = viewChild.required<ElementRef<HTMLInputElement>>('galleryInput');
+  galleryInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('galleryInput');
 
   preview = input<string | null | undefined>(null);
+  secure = input<boolean>(false);
   onImageRemoved = output<void>();
 
   url = signal<string | null>(null);
@@ -91,9 +103,14 @@ export class ImageUploaderComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.preview()) return;
-    this.postService.getFile(this.preview()!).subscribe((blob) => {
-      this._setImagePreview(blob);
-    });
+    if (this.secure()) {
+      this.postService.getFile(this.preview()!).subscribe((blob) => {
+        this._setImagePreview(blob);
+      });
+    }
+    else {
+      this.url.set(this.preview()!);
+    }
   }
 
   select(event: any): void {

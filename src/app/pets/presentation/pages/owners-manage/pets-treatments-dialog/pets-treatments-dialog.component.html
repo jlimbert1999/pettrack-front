@@ -58,7 +58,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="warn">Cancelar</button>
-  <button mat-flat-button [disabled]="formTreatment.invalid" (click)="save()">
+  <button mat-flat-button [disabled]="formTreatment.invalid || isSaving()" (click)="save()">
     Guardar
   </button>
 </mat-dialog-actions>

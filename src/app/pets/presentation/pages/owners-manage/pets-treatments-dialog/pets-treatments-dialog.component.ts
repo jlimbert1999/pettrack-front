@@ -20,11 +20,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 
-import { map, Observable } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 
 import { Pet } from '../../../../domain';
 import { TreatmentService } from '../../../services';
 import {
+  AlertService,
   SimpleSelectOption,
   SimpleSelectSearchComponent,
 } from '../../../../../shared';
@@ -53,6 +54,7 @@ export class PetsTreatmentsDialogComponent {
   private dialogRef = inject(MatDialogRef);
   private formBuilder = inject(FormBuilder);
   private treatmentService = inject(TreatmentService);
+  private alertService = inject(AlertService);
   data = inject<Pet[]>(MAT_DIALOG_DATA);
 
   centers = toSignal(this._getCenters(), { initialValue: [] });
@@ -66,10 +68,20 @@ export class PetsTreatmentsDialogComponent {
     date: [null, Validators.required],
   });
 
+  isSaving = signal(false);
+
   save() {
     if (this.formTreatment.invalid) return;
+    this.isSaving.set(true);
+    this.alertService.showActionLoader();
     this.treatmentService
       .create(this.formTreatment.value)
+      .pipe(
+        finalize(() => {
+          this.isSaving.set(false);
+          this.alertService.closeActionLoader();
+        })
+      )
       .subscribe((resp) => this.dialogRef.close(resp));
   }
 
