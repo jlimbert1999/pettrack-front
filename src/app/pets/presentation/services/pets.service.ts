@@ -76,10 +76,13 @@ export class PetsService {
   }
 
   private getBreeds() {
-    return this.http
-      .get<breed[]>(`${this.url}/types/breeds`)
-      .pipe(
-        map((resp) => resp.map(({ id, name }) => ({ value: id, text: name })))
-      );
+    return this.http.get<breed[]>(`${this.url}/types/breeds`).pipe(
+      map((resp) =>
+        resp.map(({ id, name, species }) => ({
+          value: id,
+          text: `${species} - ${name}`,
+        }))
+      )
+    );
   }
 }
